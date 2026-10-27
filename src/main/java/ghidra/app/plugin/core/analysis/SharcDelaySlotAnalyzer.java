@@ -66,6 +66,8 @@ public class SharcDelaySlotAnalyzer extends AbstractAnalyzer {
 			MessageLog log) throws CancelledException {
 		Register visa = program.getRegister("visa");
 		Register dslot = program.getRegister("dslot");
+		// the second slot's length gives a CALL (DB) its return address (DBRET in the language)
+		Register dslot2 = program.getRegister("dslot2");
 		if (visa == null || dslot == null) {
 			return false;
 		}
@@ -84,12 +86,15 @@ public class SharcDelaySlotAnalyzer extends AbstractAnalyzer {
 				continue;
 			}
 			int want = len1 / 2 - 1;
+			int len2 = length(listing, pseudo, slot1.add(len1));
+			int want2 = (len2 == 4 || len2 == 6) ? len2 / 2 - 1 : 0;
 			BigInteger have = ins.getValue(dslot, false);
-			if (have != null && have.intValue() == want) {
+			BigInteger have2 = dslot2 == null ? null : ins.getValue(dslot2, false);
+			if ((have == null ? 0 : have.intValue()) == want &&
+				(dslot2 == null || (have2 == null ? 0 : have2.intValue()) == want2)) {
 				continue;
 			}
-			int len2 = length(listing, pseudo, slot1.add(len1));
-			fixes.add(new Fix(ins.getMinAddress(), slot1.add(len1 + Math.max(len2, 0) - 1), want));
+			fixes.add(new Fix(ins.getMinAddress(), slot1.add(len1 + Math.max(len2, 0) - 1), want, want2));
 		}
 		ProgramContext ctx = program.getProgramContext();
 		for (Fix fix : fixes) {
@@ -97,6 +102,9 @@ public class SharcDelaySlotAnalyzer extends AbstractAnalyzer {
 			try {
 				listing.clearCodeUnits(fix.start, fix.end, false);
 				ctx.setValue(dslot, fix.start, fix.start, BigInteger.valueOf(fix.dslot));
+				if (dslot2 != null) {
+					ctx.setValue(dslot2, fix.start, fix.start, BigInteger.valueOf(fix.dslot2));
+				}
 				new DisassembleCommand(fix.start, null, true).applyTo(program, monitor);
 			}
 			catch (ContextChangeException e) {
@@ -126,6 +134,6 @@ public class SharcDelaySlotAnalyzer extends AbstractAnalyzer {
 		}
 	}
 
-	private record Fix(Address start, Address end, int dslot) {
+	private record Fix(Address start, Address end, int dslot, int dslot2) {
 	}
 }
