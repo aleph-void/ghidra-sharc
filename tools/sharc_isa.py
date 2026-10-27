@@ -69,8 +69,8 @@ SHIFT = {0x00: "R{n} = LSHIFT R{x} BY {y}", 0x20: "R{n} = R{n} OR LSHIFT R{x} BY
           0x6C: "R{n} = R{n} OR FDEP R{x} BY {f} (SE)", 0x40: "R{n} = FEXT R{x} BY {f}",
           0x48: "R{n} = FEXT R{x} BY {f} (SE)", 0x80: "R{n} = EXP R{x}", 0x84: "R{n} = EXP R{x} (EX)",
           0x88: "R{n} = LEFTZ R{x}", 0x8C: "R{n} = LEFTO R{x}", 0x90: "R{n} = FPACK F{x}",
-          0x94: "F{n} = FUNPACK R{x}", 0x74: "BITDEP R{x} BY {b}", 0x50: "R{n} = BITEXT R{x} BY {b}",
-          0x58: "R{n} = BITEXT R{x} BY {b} (NU)", 0x7C: "BFFWRP = {w}", 0x70: "R{n} = BFFWRP"}
+          0x94: "F{n} = FUNPACK R{x}", 0x74: "BITDEP R{x} BY {b}", 0x50: "R{n} = BITEXT {b}",
+          0x58: "R{n} = BITEXT {b} (NU)", 0x7C: "BFFWRP = {w}", 0x70: "R{n} = BFFWRP"}
 
 MOD1 = {(1, 1, 0, 0): "SSI", (0, 1, 0, 0): "SUI", (1, 0, 0, 0): "USI", (0, 0, 0, 0): "UUI",
          (1, 1, 1, 0): "SSF", (0, 1, 1, 0): "SUF", (1, 0, 1, 0): "USF", (0, 0, 1, 0): "UUF",

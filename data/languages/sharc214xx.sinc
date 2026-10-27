@@ -572,8 +572,8 @@ CMP48: b11_8rn^" = LEFTO "^b7_4rx is a22_22=0 & a21_20=2 & a19_16=0x8 ; b15_12=0
 CMP48: b11_8rn^" = FPACK "^b7_4fxN is a22_22=0 & a21_20=2 & a19_16=0x9 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4fxN & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x90:1); setsz(b11_8rn); }
 CMP48: b11_8fnN^" = FUNPACK "^b7_4rx is a22_22=0 & a21_20=2 & a19_16=0x9 ; b15_12=0x4 & b11_8fnN & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x94:1); setsz(b11_8rn); }
 CMP48: "BITDEP "^b7_4rx^" BY "^b3_0ry is a22_22=0 & a21_20=2 & a19_16=0x7 ; b15_12=0x4 & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x74:1); setsz(b11_8rn); }
-CMP48: b11_8rn^" = BITEXT "^b7_4rx^" BY "^b3_0ry is a22_22=0 & a21_20=2 & a19_16=0x5 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x50:1); setsz(b11_8rn); }
-CMP48: b11_8rn^" = BITEXT "^b7_4rx^" BY "^b3_0ry^" (NU)" is a22_22=0 & a21_20=2 & a19_16=0x5 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x58:1); setsz(b11_8rn); }
+CMP48: b11_8rn^" = BITEXT "^b3_0ry is a22_22=0 & a21_20=2 & a19_16=0x5 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x50:1); setsz(b11_8rn); }
+CMP48: b11_8rn^" = BITEXT "^b3_0ry^" (NU)" is a22_22=0 & a21_20=2 & a19_16=0x5 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x58:1); setsz(b11_8rn); }
 CMP48: "BFFWRP = "^b7_4rx is a22_22=0 & a21_20=2 & a19_16=0x7 ; b15_12=0xc & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x7c:1); setsz(b11_8rn); }
 CMP48: b11_8rn^" = BFFWRP" is a22_22=0 & a21_20=2 & a19_16=0x7 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x70:1); setsz(b11_8rn); }
 CMP48: b15_12rm^" = "^b7_6rxm^" * "^b5_4rym^" (SSFR), "^b11_8ra^" = "^b3_2rxa^" + "^b1_0rya is a22_22=1 & a21_16=0x4 ; b11_8ra & b15_12rm & b1_0rya & b3_2rxa & b5_4rym & b7_6rxm { local pm:8 = (sext(b7_6rxm) * sext(b5_4rym)) << 1; local tm:4 = pm(4); local ta:4 = b3_2rxa + b1_0rya; b15_12rm = tm; b11_8ra = ta; setfix(b11_8ra); }
@@ -844,8 +844,8 @@ CMP48s: b11_8rn^" = LEFTO "^b7_4rx^", " is a22_22=0 & a21_20=2 & a19_16=0x8 ; b1
 CMP48s: b11_8rn^" = FPACK "^b7_4fxN^", " is a22_22=0 & a21_20=2 & a19_16=0x9 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4fxN & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x90:1); setsz(b11_8rn); }
 CMP48s: b11_8fnN^" = FUNPACK "^b7_4rx^", " is a22_22=0 & a21_20=2 & a19_16=0x9 ; b15_12=0x4 & b11_8fnN & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x94:1); setsz(b11_8rn); }
 CMP48s: "BITDEP "^b7_4rx^" BY "^b3_0ry^", " is a22_22=0 & a21_20=2 & a19_16=0x7 ; b15_12=0x4 & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x74:1); setsz(b11_8rn); }
-CMP48s: b11_8rn^" = BITEXT "^b7_4rx^" BY "^b3_0ry^", " is a22_22=0 & a21_20=2 & a19_16=0x5 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x50:1); setsz(b11_8rn); }
-CMP48s: b11_8rn^" = BITEXT "^b7_4rx^" BY "^b3_0ry^" (NU)"^", " is a22_22=0 & a21_20=2 & a19_16=0x5 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x58:1); setsz(b11_8rn); }
+CMP48s: b11_8rn^" = BITEXT "^b3_0ry^", " is a22_22=0 & a21_20=2 & a19_16=0x5 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x50:1); setsz(b11_8rn); }
+CMP48s: b11_8rn^" = BITEXT "^b3_0ry^" (NU)"^", " is a22_22=0 & a21_20=2 & a19_16=0x5 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x58:1); setsz(b11_8rn); }
 CMP48s: "BFFWRP = "^b7_4rx^", " is a22_22=0 & a21_20=2 & a19_16=0x7 ; b15_12=0xc & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x7c:1); setsz(b11_8rn); }
 CMP48s: b11_8rn^" = BFFWRP"^", " is a22_22=0 & a21_20=2 & a19_16=0x7 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x70:1); setsz(b11_8rn); }
 CMP48s: b15_12rm^" = "^b7_6rxm^" * "^b5_4rym^" (SSFR), "^b11_8ra^" = "^b3_2rxa^" + "^b1_0rya^", " is a22_22=1 & a21_16=0x4 ; b11_8ra & b15_12rm & b1_0rya & b3_2rxa & b5_4rym & b7_6rxm { local pm:8 = (sext(b7_6rxm) * sext(b5_4rym)) << 1; local tm:4 = pm(4); local ta:4 = b3_2rxa + b1_0rya; b15_12rm = tm; b11_8ra = ta; setfix(b11_8ra); }
@@ -1116,8 +1116,8 @@ CMP48p: ", "^b11_8rn^" = LEFTO "^b7_4rx is a22_22=0 & a21_20=2 & a19_16=0x8 ; b1
 CMP48p: ", "^b11_8rn^" = FPACK "^b7_4fxN is a22_22=0 & a21_20=2 & a19_16=0x9 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4fxN & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x90:1); setsz(b11_8rn); }
 CMP48p: ", "^b11_8fnN^" = FUNPACK "^b7_4rx is a22_22=0 & a21_20=2 & a19_16=0x9 ; b15_12=0x4 & b11_8fnN & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x94:1); setsz(b11_8rn); }
 CMP48p: ", "^"BITDEP "^b7_4rx^" BY "^b3_0ry is a22_22=0 & a21_20=2 & a19_16=0x7 ; b15_12=0x4 & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x74:1); setsz(b11_8rn); }
-CMP48p: ", "^b11_8rn^" = BITEXT "^b7_4rx^" BY "^b3_0ry is a22_22=0 & a21_20=2 & a19_16=0x5 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x50:1); setsz(b11_8rn); }
-CMP48p: ", "^b11_8rn^" = BITEXT "^b7_4rx^" BY "^b3_0ry^" (NU)" is a22_22=0 & a21_20=2 & a19_16=0x5 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x58:1); setsz(b11_8rn); }
+CMP48p: ", "^b11_8rn^" = BITEXT "^b3_0ry is a22_22=0 & a21_20=2 & a19_16=0x5 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x50:1); setsz(b11_8rn); }
+CMP48p: ", "^b11_8rn^" = BITEXT "^b3_0ry^" (NU)" is a22_22=0 & a21_20=2 & a19_16=0x5 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x58:1); setsz(b11_8rn); }
 CMP48p: ", "^"BFFWRP = "^b7_4rx is a22_22=0 & a21_20=2 & a19_16=0x7 ; b15_12=0xc & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x7c:1); setsz(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = BFFWRP" is a22_22=0 & a21_20=2 & a19_16=0x7 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x70:1); setsz(b11_8rn); }
 CMP48p: ", "^b15_12rm^" = "^b7_6rxm^" * "^b5_4rym^" (SSFR), "^b11_8ra^" = "^b3_2rxa^" + "^b1_0rya is a22_22=1 & a21_16=0x4 ; b11_8ra & b15_12rm & b1_0rya & b3_2rxa & b5_4rym & b7_6rxm { local pm:8 = (sext(b7_6rxm) * sext(b5_4rym)) << 1; local tm:4 = pm(4); local ta:4 = b3_2rxa + b1_0rya; b15_12rm = tm; b11_8ra = ta; setfix(b11_8ra); }
@@ -1388,8 +1388,8 @@ CMP48e: ", ELSE "^b11_8rn^" = LEFTO "^b7_4rx is a22_22=0 & a21_20=2 & a19_16=0x8
 CMP48e: ", ELSE "^b11_8rn^" = FPACK "^b7_4fxN is a22_22=0 & a21_20=2 & a19_16=0x9 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4fxN & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x90:1); setsz(b11_8rn); }
 CMP48e: ", ELSE "^b11_8fnN^" = FUNPACK "^b7_4rx is a22_22=0 & a21_20=2 & a19_16=0x9 ; b15_12=0x4 & b11_8fnN & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x94:1); setsz(b11_8rn); }
 CMP48e: ", ELSE "^"BITDEP "^b7_4rx^" BY "^b3_0ry is a22_22=0 & a21_20=2 & a19_16=0x7 ; b15_12=0x4 & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x74:1); setsz(b11_8rn); }
-CMP48e: ", ELSE "^b11_8rn^" = BITEXT "^b7_4rx^" BY "^b3_0ry is a22_22=0 & a21_20=2 & a19_16=0x5 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x50:1); setsz(b11_8rn); }
-CMP48e: ", ELSE "^b11_8rn^" = BITEXT "^b7_4rx^" BY "^b3_0ry^" (NU)" is a22_22=0 & a21_20=2 & a19_16=0x5 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x58:1); setsz(b11_8rn); }
+CMP48e: ", ELSE "^b11_8rn^" = BITEXT "^b3_0ry is a22_22=0 & a21_20=2 & a19_16=0x5 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x50:1); setsz(b11_8rn); }
+CMP48e: ", ELSE "^b11_8rn^" = BITEXT "^b3_0ry^" (NU)" is a22_22=0 & a21_20=2 & a19_16=0x5 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x58:1); setsz(b11_8rn); }
 CMP48e: ", ELSE "^"BFFWRP = "^b7_4rx is a22_22=0 & a21_20=2 & a19_16=0x7 ; b15_12=0xc & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x7c:1); setsz(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = BFFWRP" is a22_22=0 & a21_20=2 & a19_16=0x7 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { b11_8rn = shiftop(b7_4rx, b3_0ry, 0x70:1); setsz(b11_8rn); }
 CMP48e: ", ELSE "^b15_12rm^" = "^b7_6rxm^" * "^b5_4rym^" (SSFR), "^b11_8ra^" = "^b3_2rxa^" + "^b1_0rya is a22_22=1 & a21_16=0x4 ; b11_8ra & b15_12rm & b1_0rya & b3_2rxa & b5_4rym & b7_6rxm { local pm:8 = (sext(b7_6rxm) * sext(b5_4rym)) << 1; local tm:4 = pm(4); local ta:4 = b3_2rxa + b1_0rya; b15_12rm = tm; b11_8ra = ta; setfix(b11_8ra); }
@@ -1660,8 +1660,8 @@ CMP2B: a27_24rn^" = LEFTO "^a23_20rx is a38_38=0 & a37_36=2 & a35_28=0x8c & a19_
 CMP2B: a27_24rn^" = FPACK "^a23_20fxN is a38_38=0 & a37_36=2 & a35_28=0x90 & a19_16ry & a23_20fxN & a23_20rx & a27_24rn { a27_24rn = shiftop(a23_20rx, a19_16ry, 0x90:1); setsz(a27_24rn); }
 CMP2B: a27_24fnN^" = FUNPACK "^a23_20rx is a38_38=0 & a37_36=2 & a35_28=0x94 & a19_16ry & a23_20rx & a27_24fnN & a27_24rn { a27_24rn = shiftop(a23_20rx, a19_16ry, 0x94:1); setsz(a27_24rn); }
 CMP2B: "BITDEP "^a23_20rx^" BY "^a19_16ry is a38_38=0 & a37_36=2 & a35_28=0x74 & a19_16ry & a23_20rx & a27_24rn { a27_24rn = shiftop(a23_20rx, a19_16ry, 0x74:1); setsz(a27_24rn); }
-CMP2B: a27_24rn^" = BITEXT "^a23_20rx^" BY "^a19_16ry is a38_38=0 & a37_36=2 & a35_28=0x50 & a19_16ry & a23_20rx & a27_24rn { a27_24rn = shiftop(a23_20rx, a19_16ry, 0x50:1); setsz(a27_24rn); }
-CMP2B: a27_24rn^" = BITEXT "^a23_20rx^" BY "^a19_16ry^" (NU)" is a38_38=0 & a37_36=2 & a35_28=0x58 & a19_16ry & a23_20rx & a27_24rn { a27_24rn = shiftop(a23_20rx, a19_16ry, 0x58:1); setsz(a27_24rn); }
+CMP2B: a27_24rn^" = BITEXT "^a19_16ry is a38_38=0 & a37_36=2 & a35_28=0x50 & a19_16ry & a23_20rx & a27_24rn { a27_24rn = shiftop(a23_20rx, a19_16ry, 0x50:1); setsz(a27_24rn); }
+CMP2B: a27_24rn^" = BITEXT "^a19_16ry^" (NU)" is a38_38=0 & a37_36=2 & a35_28=0x58 & a19_16ry & a23_20rx & a27_24rn { a27_24rn = shiftop(a23_20rx, a19_16ry, 0x58:1); setsz(a27_24rn); }
 CMP2B: "BFFWRP = "^a23_20rx is a38_38=0 & a37_36=2 & a35_28=0x7c & a19_16ry & a23_20rx & a27_24rn { a27_24rn = shiftop(a23_20rx, a19_16ry, 0x7c:1); setsz(a27_24rn); }
 CMP2B: a27_24rn^" = BFFWRP" is a38_38=0 & a37_36=2 & a35_28=0x70 & a19_16ry & a23_20rx & a27_24rn { a27_24rn = shiftop(a23_20rx, a19_16ry, 0x70:1); setsz(a27_24rn); }
 CMP2B: a31_28rm^" = "^a23_22rxm^" * "^a21_20rym^" (SSFR), "^a27_24ra^" = "^a19_18rxa^" + "^a17_16rya is a38_38=1 & a37_32=0x4 & a17_16rya & a19_18rxa & a21_20rym & a23_22rxm & a27_24ra & a31_28rm { local pm:8 = (sext(a23_22rxm) * sext(a21_20rym)) << 1; local tm:4 = pm(4); local ta:4 = a19_18rxa + a17_16rya; a31_28rm = tm; a27_24ra = ta; setfix(a27_24ra); }
@@ -2076,8 +2076,8 @@ SHIMM: b7_4sh^" = LEFTO "^b3_0sh is a22_22=0 & a21_16=0x23 & a30_27 ; b15_8s & b
 SHIMM: b7_4sh^" = FPACK "^b3_0shfN is a22_22=0 & a21_16=0x24 & a30_27 ; b15_8s & b3_0sh & b3_0shfN & b7_4sh  { local k:4 = b15_8s; b7_4sh = shiftop(b3_0sh, k, 0x90:1); setsz(b7_4sh); }
 SHIMM: b7_4shfN^" = FUNPACK "^b3_0sh is a22_22=0 & a21_16=0x25 & a30_27 ; b15_8s & b3_0sh & b7_4sh & b7_4shfN  { local k:4 = b15_8s; b7_4sh = shiftop(b3_0sh, k, 0x94:1); setsz(b7_4sh); }
 SHIMM: "BITDEP "^b3_0sh^" BY "^imm12 is a22_22=0 & a21_16=0x1d & a30_27 ; b15_8s & b15_8u & b3_0sh & b7_4sh [ imm12 = (a30_27 << 8) | b15_8u; ] { local k:4 = imm12; b7_4sh = shiftop(b3_0sh, k, 0x74:1); setsz(b7_4sh); }
-SHIMM: b7_4sh^" = BITEXT "^b3_0sh^" BY "^imm12 is a22_22=0 & a21_16=0x14 & a30_27 ; b15_8s & b15_8u & b3_0sh & b7_4sh [ imm12 = (a30_27 << 8) | b15_8u; ] { local k:4 = imm12; b7_4sh = shiftop(b3_0sh, k, 0x50:1); setsz(b7_4sh); }
-SHIMM: b7_4sh^" = BITEXT "^b3_0sh^" BY "^imm12^" (NU)" is a22_22=0 & a21_16=0x16 & a30_27 ; b15_8s & b15_8u & b3_0sh & b7_4sh [ imm12 = (a30_27 << 8) | b15_8u; ] { local k:4 = imm12; b7_4sh = shiftop(b3_0sh, k, 0x58:1); setsz(b7_4sh); }
+SHIMM: b7_4sh^" = BITEXT "^imm12 is a22_22=0 & a21_16=0x14 & a30_27 ; b15_8s & b15_8u & b3_0sh & b7_4sh [ imm12 = (a30_27 << 8) | b15_8u; ] { local k:4 = imm12; b7_4sh = shiftop(b3_0sh, k, 0x50:1); setsz(b7_4sh); }
+SHIMM: b7_4sh^" = BITEXT "^imm12^" (NU)" is a22_22=0 & a21_16=0x16 & a30_27 ; b15_8s & b15_8u & b3_0sh & b7_4sh [ imm12 = (a30_27 << 8) | b15_8u; ] { local k:4 = imm12; b7_4sh = shiftop(b3_0sh, k, 0x58:1); setsz(b7_4sh); }
 SHIMM: "BFFWRP = "^imm12 is a22_22=0 & a21_16=0x1f & a30_27 ; b15_8s & b15_8u & b3_0sh & b7_4sh [ imm12 = (a30_27 << 8) | b15_8u; ] { local k:4 = imm12; b7_4sh = shiftop(b3_0sh, k, 0x7c:1); setsz(b7_4sh); }
 SHIMM: b7_4sh^" = BFFWRP" is a22_22=0 & a21_16=0x1c & a30_27 ; b15_8s & b3_0sh & b7_4sh  { local k:4 = b15_8s; b7_4sh = shiftop(b3_0sh, k, 0x70:1); setsz(b7_4sh); }
 
