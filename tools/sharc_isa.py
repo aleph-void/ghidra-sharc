@@ -116,8 +116,6 @@ def mult_text(op, n, x, y):
             dst = (op >> 1) & 3
             src = "MRB" if dst & 1 else "MRF"
             lhs = {0: f"R{n}", 1: f"R{n}", 2: "MRF", 3: "MRB"}[dst]
-            if op == 0:
-                return None
             return f"{lhs} = SAT {src} ({'S' if op & 1 else 'U'}{'F' if op & 8 else 'I'})"
         if (op >> 4) == 1:
             if op == 0x14:
@@ -133,7 +131,9 @@ def mult_text(op, n, x, y):
             return f"F{n} = F{x} * F{y}"
         return None
     y_s, x_s, f, r = (op >> 5) & 1, (op >> 4) & 1, (op >> 3) & 1, op & 1
-    mod = MOD1.get((y_s, x_s, f, r)) or f"{'S' if y_s else 'U'}{'S' if x_s else 'U'}?"
+    mod = MOD1.get((y_s, x_s, f, r))
+    if mod is None:                 # rounding an integer product (PGR Table 12-7): reserved
+        return None
     dst = (op >> 1) & 3
     if hi == 1:
         lhs = {0: f"R{n}", 1: None, 2: "MRF", 3: "MRB"}[dst]

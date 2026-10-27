@@ -391,6 +391,7 @@ CMP48: b11_8fnN^" = MAX("^b7_4fxN^", "^b3_0fyN^")" is a22_22=0 & a21_20=0 & a19_
 CMP48: b11_8fnN^" = CLIP "^b7_4fxN^" BY "^b3_0fyN is a22_22=0 & a21_20=0 & a19_16=0xe ; b15_12=0x3 & b11_8fnN & b11_8rn & b3_0fyN & b3_0ry & b7_4fxN & b7_4rx { b11_8rn = fclip(b7_4rx, b3_0ry); setflt(b11_8rn); }
 CMP48: b11_8rn^" = "^b7_4rx^" + "^b3_0ry^", "^b15_12rs^" = "^b7_4_d1^" - "^b3_0_d2 is a22_22=0 & a21_20=0 & a19_16=0x7 ; b11_8rn & b15_12rs & b3_0_d2 & b3_0ry & b7_4_d1 & b7_4rx { local ta:4 = b7_4rx + b3_0ry; local ts:4 = b7_4rx - b3_0ry; b11_8rn = ta; b15_12rs = ts; }
 CMP48: b11_8fnN^" = "^b7_4fxN^" + "^b3_0fyN^", "^b15_12fsN^" = "^b7_4_d3^" - "^b3_0_d4 is a22_22=0 & a21_20=0 & a19_16=0xf ; b11_8fnN & b11_8rn & b15_12fsN & b15_12rs & b3_0_d4 & b3_0fyN & b3_0ry & b7_4_d3 & b7_4fxN & b7_4rx { local ta:4 = b7_4rx f+ b3_0ry; local ts:4 = b7_4rx f- b3_0ry; b11_8rn = ta; b15_12rs = ts; }
+CMP48: b11_8rn^" = SAT MRF (UI)" is a22_22=0 & a21_20=1 & a19_16=0x0 ; b15_12=0x0 & b11_8rn { b11_8rn = mrop(0x0:4); }
 CMP48: b11_8rn^" = SAT MRF (SI)" is a22_22=0 & a21_20=1 & a19_16=0x0 ; b15_12=0x1 & b11_8rn { b11_8rn = mrop(0x1:4); }
 CMP48: b11_8rn^" = SAT MRB (UI)" is a22_22=0 & a21_20=1 & a19_16=0x0 ; b15_12=0x2 & b11_8rn { b11_8rn = mrop(0x2:4); }
 CMP48: b11_8rn^" = SAT MRB (SI)" is a22_22=0 & a21_20=1 & a19_16=0x0 ; b15_12=0x3 & b11_8rn { b11_8rn = mrop(0x3:4); }
@@ -418,11 +419,8 @@ CMP48: "MRB = RND MRB (UF)" is a22_22=0 & a21_20=1 & a19_16=0x1 ; b15_12=0xe { m
 CMP48: "MRB = RND MRB (SF)" is a22_22=0 & a21_20=1 & a19_16=0x1 ; b15_12=0xf { mrop(0x1f:4); }
 CMP48: b11_8fnN^" = "^b7_4fxN^" * "^b3_0fyN is a22_22=0 & a21_20=1 & a19_16=0x3 ; b15_12=0x0 & b11_8fnN & b11_8rn & b3_0fyN & b3_0ry & b7_4fxN & b7_4rx { b11_8rn = b7_4rx f* b3_0ry; setfmul(b11_8rn); }
 CMP48: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48: "MRF = "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = (zext(b7_4rx) * zext(b3_0ry)); }
-CMP48: "MRF = "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = (zext(b7_4rx) * zext(b3_0ry)); }
 CMP48: "MRB = "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = (zext(b7_4rx) * zext(b3_0ry)); }
-CMP48: "MRB = "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = (zext(b7_4rx) * zext(b3_0ry)); }
 CMP48: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48: "MRF = "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0xc & b3_0ry & b7_4rx { MRF = ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
@@ -430,11 +428,8 @@ CMP48: "MRF = "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21_20=1 & a19_16=0x
 CMP48: "MRB = "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0xe & b3_0ry & b7_4rx { MRB = ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48: "MRB = "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0xf & b3_0ry & b7_4rx { MRB = ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48: "MRF = "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = (sext(b7_4rx) * zext(b3_0ry)); }
-CMP48: "MRF = "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = (sext(b7_4rx) * zext(b3_0ry)); }
 CMP48: "MRB = "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = (sext(b7_4rx) * zext(b3_0ry)); }
-CMP48: "MRB = "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = (sext(b7_4rx) * zext(b3_0ry)); }
 CMP48: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48: "MRF = "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0xc & b3_0ry & b7_4rx { MRF = ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
@@ -442,11 +437,8 @@ CMP48: "MRF = "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21_20=1 & a19_16=0x
 CMP48: "MRB = "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0xe & b3_0ry & b7_4rx { MRB = ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48: "MRB = "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0xf & b3_0ry & b7_4rx { MRB = ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48: "MRF = "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = (zext(b7_4rx) * sext(b3_0ry)); }
-CMP48: "MRF = "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = (zext(b7_4rx) * sext(b3_0ry)); }
 CMP48: "MRB = "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = (zext(b7_4rx) * sext(b3_0ry)); }
-CMP48: "MRB = "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = (zext(b7_4rx) * sext(b3_0ry)); }
 CMP48: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48: "MRF = "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0xc & b3_0ry & b7_4rx { MRF = ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
@@ -454,11 +446,8 @@ CMP48: "MRF = "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21_20=1 & a19_16=0x
 CMP48: "MRB = "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0xe & b3_0ry & b7_4rx { MRB = ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48: "MRB = "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0xf & b3_0ry & b7_4rx { MRB = ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48: "MRF = "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = (sext(b7_4rx) * sext(b3_0ry)); }
-CMP48: "MRF = "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = (sext(b7_4rx) * sext(b3_0ry)); }
 CMP48: "MRB = "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = (sext(b7_4rx) * sext(b3_0ry)); }
-CMP48: "MRB = "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = (sext(b7_4rx) * sext(b3_0ry)); }
 CMP48: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SSF)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SSFR)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48: "MRF = "^b7_4rx^" * "^b3_0ry^" (SSF)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0xc & b3_0ry & b7_4rx { MRF = ((sext(b7_4rx) * sext(b3_0ry)) << 1); }
@@ -466,13 +455,9 @@ CMP48: "MRF = "^b7_4rx^" * "^b3_0ry^" (SSFR)" is a22_22=0 & a21_20=1 & a19_16=0x
 CMP48: "MRB = "^b7_4rx^" * "^b3_0ry^" (SSF)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0xe & b3_0ry & b7_4rx { MRB = ((sext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48: "MRB = "^b7_4rx^" * "^b3_0ry^" (SSFR)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0xf & b3_0ry & b7_4rx { MRB = ((sext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48: b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48: b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48: "MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF + (zext(b7_4rx) * zext(b3_0ry)); }
-CMP48: "MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF + (zext(b7_4rx) * zext(b3_0ry)); }
 CMP48: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB + (zext(b7_4rx) * zext(b3_0ry)); }
-CMP48: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB + (zext(b7_4rx) * zext(b3_0ry)); }
 CMP48: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48: b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -482,13 +467,9 @@ CMP48: "MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21_20=1 & a19
 CMP48: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB + ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB + ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48: b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48: b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48: "MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF + (sext(b7_4rx) * zext(b3_0ry)); }
-CMP48: "MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF + (sext(b7_4rx) * zext(b3_0ry)); }
 CMP48: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB + (sext(b7_4rx) * zext(b3_0ry)); }
-CMP48: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB + (sext(b7_4rx) * zext(b3_0ry)); }
 CMP48: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48: b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -498,13 +479,9 @@ CMP48: "MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21_20=1 & a19
 CMP48: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB + ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB + ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48: b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48: b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48: "MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF + (zext(b7_4rx) * sext(b3_0ry)); }
-CMP48: "MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF + (zext(b7_4rx) * sext(b3_0ry)); }
 CMP48: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB + (zext(b7_4rx) * sext(b3_0ry)); }
-CMP48: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB + (zext(b7_4rx) * sext(b3_0ry)); }
 CMP48: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48: b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -514,13 +491,9 @@ CMP48: "MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21_20=1 & a19
 CMP48: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB + ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB + ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48: b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48: b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48: "MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF + (sext(b7_4rx) * sext(b3_0ry)); }
-CMP48: "MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF + (sext(b7_4rx) * sext(b3_0ry)); }
 CMP48: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB + (sext(b7_4rx) * sext(b3_0ry)); }
-CMP48: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB + (sext(b7_4rx) * sext(b3_0ry)); }
 CMP48: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SSF)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SSFR)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48: b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (SSF)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -530,13 +503,9 @@ CMP48: "MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (SSFR)" is a22_22=0 & a21_20=1 & a19
 CMP48: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SSF)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB + ((sext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SSFR)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB + ((sext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48: b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48: b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48: "MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF - (zext(b7_4rx) * zext(b3_0ry)); }
-CMP48: "MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF - (zext(b7_4rx) * zext(b3_0ry)); }
 CMP48: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB - (zext(b7_4rx) * zext(b3_0ry)); }
-CMP48: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB - (zext(b7_4rx) * zext(b3_0ry)); }
 CMP48: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48: b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -546,13 +515,9 @@ CMP48: "MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21_20=1 & a19
 CMP48: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB - ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB - ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48: b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48: b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48: "MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF - (sext(b7_4rx) * zext(b3_0ry)); }
-CMP48: "MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF - (sext(b7_4rx) * zext(b3_0ry)); }
 CMP48: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB - (sext(b7_4rx) * zext(b3_0ry)); }
-CMP48: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB - (sext(b7_4rx) * zext(b3_0ry)); }
 CMP48: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48: b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -562,13 +527,9 @@ CMP48: "MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21_20=1 & a19
 CMP48: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB - ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB - ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48: b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48: b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48: "MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF - (zext(b7_4rx) * sext(b3_0ry)); }
-CMP48: "MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF - (zext(b7_4rx) * sext(b3_0ry)); }
 CMP48: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB - (zext(b7_4rx) * sext(b3_0ry)); }
-CMP48: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB - (zext(b7_4rx) * sext(b3_0ry)); }
 CMP48: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48: b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -578,13 +539,9 @@ CMP48: "MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21_20=1 & a19
 CMP48: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB - ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB - ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48: b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48: b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48: "MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF - (sext(b7_4rx) * sext(b3_0ry)); }
-CMP48: "MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF - (sext(b7_4rx) * sext(b3_0ry)); }
 CMP48: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB - (sext(b7_4rx) * sext(b3_0ry)); }
-CMP48: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB - (sext(b7_4rx) * sext(b3_0ry)); }
 CMP48: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SSF)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SSFR)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48: b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (SSF)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -706,6 +663,7 @@ CMP48s: b11_8fnN^" = MAX("^b7_4fxN^", "^b3_0fyN^")"^", " is a22_22=0 & a21_20=0 
 CMP48s: b11_8fnN^" = CLIP "^b7_4fxN^" BY "^b3_0fyN^", " is a22_22=0 & a21_20=0 & a19_16=0xe ; b15_12=0x3 & b11_8fnN & b11_8rn & b3_0fyN & b3_0ry & b7_4fxN & b7_4rx { b11_8rn = fclip(b7_4rx, b3_0ry); setflt(b11_8rn); }
 CMP48s: b11_8rn^" = "^b7_4rx^" + "^b3_0ry^", "^b15_12rs^" = "^b7_4_d1^" - "^b3_0_d2^", " is a22_22=0 & a21_20=0 & a19_16=0x7 ; b11_8rn & b15_12rs & b3_0_d2 & b3_0ry & b7_4_d1 & b7_4rx { local ta:4 = b7_4rx + b3_0ry; local ts:4 = b7_4rx - b3_0ry; b11_8rn = ta; b15_12rs = ts; }
 CMP48s: b11_8fnN^" = "^b7_4fxN^" + "^b3_0fyN^", "^b15_12fsN^" = "^b7_4_d3^" - "^b3_0_d4^", " is a22_22=0 & a21_20=0 & a19_16=0xf ; b11_8fnN & b11_8rn & b15_12fsN & b15_12rs & b3_0_d4 & b3_0fyN & b3_0ry & b7_4_d3 & b7_4fxN & b7_4rx { local ta:4 = b7_4rx f+ b3_0ry; local ts:4 = b7_4rx f- b3_0ry; b11_8rn = ta; b15_12rs = ts; }
+CMP48s: b11_8rn^" = SAT MRF (UI)"^", " is a22_22=0 & a21_20=1 & a19_16=0x0 ; b15_12=0x0 & b11_8rn { b11_8rn = mrop(0x0:4); }
 CMP48s: b11_8rn^" = SAT MRF (SI)"^", " is a22_22=0 & a21_20=1 & a19_16=0x0 ; b15_12=0x1 & b11_8rn { b11_8rn = mrop(0x1:4); }
 CMP48s: b11_8rn^" = SAT MRB (UI)"^", " is a22_22=0 & a21_20=1 & a19_16=0x0 ; b15_12=0x2 & b11_8rn { b11_8rn = mrop(0x2:4); }
 CMP48s: b11_8rn^" = SAT MRB (SI)"^", " is a22_22=0 & a21_20=1 & a19_16=0x0 ; b15_12=0x3 & b11_8rn { b11_8rn = mrop(0x3:4); }
@@ -733,11 +691,8 @@ CMP48s: "MRB = RND MRB (UF)"^", " is a22_22=0 & a21_20=1 & a19_16=0x1 ; b15_12=0
 CMP48s: "MRB = RND MRB (SF)"^", " is a22_22=0 & a21_20=1 & a19_16=0x1 ; b15_12=0xf { mrop(0x1f:4); }
 CMP48s: b11_8fnN^" = "^b7_4fxN^" * "^b3_0fyN^", " is a22_22=0 & a21_20=1 & a19_16=0x3 ; b15_12=0x0 & b11_8fnN & b11_8rn & b3_0fyN & b3_0ry & b7_4fxN & b7_4rx { b11_8rn = b7_4rx f* b3_0ry; setfmul(b11_8rn); }
 CMP48s: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (UUI)"^", " is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48s: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (UU?)"^", " is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48s: "MRF = "^b7_4rx^" * "^b3_0ry^" (UUI)"^", " is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = (zext(b7_4rx) * zext(b3_0ry)); }
-CMP48s: "MRF = "^b7_4rx^" * "^b3_0ry^" (UU?)"^", " is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = (zext(b7_4rx) * zext(b3_0ry)); }
 CMP48s: "MRB = "^b7_4rx^" * "^b3_0ry^" (UUI)"^", " is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = (zext(b7_4rx) * zext(b3_0ry)); }
-CMP48s: "MRB = "^b7_4rx^" * "^b3_0ry^" (UU?)"^", " is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = (zext(b7_4rx) * zext(b3_0ry)); }
 CMP48s: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (UUF)"^", " is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (UUFR)"^", " is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48s: "MRF = "^b7_4rx^" * "^b3_0ry^" (UUF)"^", " is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0xc & b3_0ry & b7_4rx { MRF = ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
@@ -745,11 +700,8 @@ CMP48s: "MRF = "^b7_4rx^" * "^b3_0ry^" (UUFR)"^", " is a22_22=0 & a21_20=1 & a19
 CMP48s: "MRB = "^b7_4rx^" * "^b3_0ry^" (UUF)"^", " is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0xe & b3_0ry & b7_4rx { MRB = ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48s: "MRB = "^b7_4rx^" * "^b3_0ry^" (UUFR)"^", " is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0xf & b3_0ry & b7_4rx { MRB = ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48s: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SUI)"^", " is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48s: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (US?)"^", " is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48s: "MRF = "^b7_4rx^" * "^b3_0ry^" (SUI)"^", " is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = (sext(b7_4rx) * zext(b3_0ry)); }
-CMP48s: "MRF = "^b7_4rx^" * "^b3_0ry^" (US?)"^", " is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = (sext(b7_4rx) * zext(b3_0ry)); }
 CMP48s: "MRB = "^b7_4rx^" * "^b3_0ry^" (SUI)"^", " is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = (sext(b7_4rx) * zext(b3_0ry)); }
-CMP48s: "MRB = "^b7_4rx^" * "^b3_0ry^" (US?)"^", " is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = (sext(b7_4rx) * zext(b3_0ry)); }
 CMP48s: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SUF)"^", " is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SUFR)"^", " is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48s: "MRF = "^b7_4rx^" * "^b3_0ry^" (SUF)"^", " is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0xc & b3_0ry & b7_4rx { MRF = ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
@@ -757,11 +709,8 @@ CMP48s: "MRF = "^b7_4rx^" * "^b3_0ry^" (SUFR)"^", " is a22_22=0 & a21_20=1 & a19
 CMP48s: "MRB = "^b7_4rx^" * "^b3_0ry^" (SUF)"^", " is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0xe & b3_0ry & b7_4rx { MRB = ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48s: "MRB = "^b7_4rx^" * "^b3_0ry^" (SUFR)"^", " is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0xf & b3_0ry & b7_4rx { MRB = ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48s: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (USI)"^", " is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48s: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SU?)"^", " is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48s: "MRF = "^b7_4rx^" * "^b3_0ry^" (USI)"^", " is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = (zext(b7_4rx) * sext(b3_0ry)); }
-CMP48s: "MRF = "^b7_4rx^" * "^b3_0ry^" (SU?)"^", " is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = (zext(b7_4rx) * sext(b3_0ry)); }
 CMP48s: "MRB = "^b7_4rx^" * "^b3_0ry^" (USI)"^", " is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = (zext(b7_4rx) * sext(b3_0ry)); }
-CMP48s: "MRB = "^b7_4rx^" * "^b3_0ry^" (SU?)"^", " is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = (zext(b7_4rx) * sext(b3_0ry)); }
 CMP48s: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (USF)"^", " is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (USFR)"^", " is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48s: "MRF = "^b7_4rx^" * "^b3_0ry^" (USF)"^", " is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0xc & b3_0ry & b7_4rx { MRF = ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
@@ -769,11 +718,8 @@ CMP48s: "MRF = "^b7_4rx^" * "^b3_0ry^" (USFR)"^", " is a22_22=0 & a21_20=1 & a19
 CMP48s: "MRB = "^b7_4rx^" * "^b3_0ry^" (USF)"^", " is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0xe & b3_0ry & b7_4rx { MRB = ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48s: "MRB = "^b7_4rx^" * "^b3_0ry^" (USFR)"^", " is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0xf & b3_0ry & b7_4rx { MRB = ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48s: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SSI)"^", " is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48s: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SS?)"^", " is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48s: "MRF = "^b7_4rx^" * "^b3_0ry^" (SSI)"^", " is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = (sext(b7_4rx) * sext(b3_0ry)); }
-CMP48s: "MRF = "^b7_4rx^" * "^b3_0ry^" (SS?)"^", " is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = (sext(b7_4rx) * sext(b3_0ry)); }
 CMP48s: "MRB = "^b7_4rx^" * "^b3_0ry^" (SSI)"^", " is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = (sext(b7_4rx) * sext(b3_0ry)); }
-CMP48s: "MRB = "^b7_4rx^" * "^b3_0ry^" (SS?)"^", " is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = (sext(b7_4rx) * sext(b3_0ry)); }
 CMP48s: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SSF)"^", " is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SSFR)"^", " is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48s: "MRF = "^b7_4rx^" * "^b3_0ry^" (SSF)"^", " is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0xc & b3_0ry & b7_4rx { MRF = ((sext(b7_4rx) * sext(b3_0ry)) << 1); }
@@ -781,13 +727,9 @@ CMP48s: "MRF = "^b7_4rx^" * "^b3_0ry^" (SSFR)"^", " is a22_22=0 & a21_20=1 & a19
 CMP48s: "MRB = "^b7_4rx^" * "^b3_0ry^" (SSF)"^", " is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0xe & b3_0ry & b7_4rx { MRB = ((sext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48s: "MRB = "^b7_4rx^" * "^b3_0ry^" (SSFR)"^", " is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0xf & b3_0ry & b7_4rx { MRB = ((sext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48s: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (UUI)"^", " is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48s: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (UU?)"^", " is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (UUI)"^", " is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48s: b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (UU?)"^", " is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48s: "MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (UUI)"^", " is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF + (zext(b7_4rx) * zext(b3_0ry)); }
-CMP48s: "MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (UU?)"^", " is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF + (zext(b7_4rx) * zext(b3_0ry)); }
 CMP48s: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (UUI)"^", " is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB + (zext(b7_4rx) * zext(b3_0ry)); }
-CMP48s: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (UU?)"^", " is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB + (zext(b7_4rx) * zext(b3_0ry)); }
 CMP48s: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (UUF)"^", " is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (UUFR)"^", " is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (UUF)"^", " is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -797,13 +739,9 @@ CMP48s: "MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (UUFR)"^", " is a22_22=0 & a21_20=1
 CMP48s: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (UUF)"^", " is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB + ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48s: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (UUFR)"^", " is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB + ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48s: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SUI)"^", " is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48s: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (US?)"^", " is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (SUI)"^", " is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48s: b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (US?)"^", " is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48s: "MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (SUI)"^", " is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF + (sext(b7_4rx) * zext(b3_0ry)); }
-CMP48s: "MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (US?)"^", " is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF + (sext(b7_4rx) * zext(b3_0ry)); }
 CMP48s: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SUI)"^", " is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB + (sext(b7_4rx) * zext(b3_0ry)); }
-CMP48s: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (US?)"^", " is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB + (sext(b7_4rx) * zext(b3_0ry)); }
 CMP48s: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SUF)"^", " is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SUFR)"^", " is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (SUF)"^", " is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -813,13 +751,9 @@ CMP48s: "MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (SUFR)"^", " is a22_22=0 & a21_20=1
 CMP48s: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SUF)"^", " is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB + ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48s: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SUFR)"^", " is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB + ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48s: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (USI)"^", " is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48s: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SU?)"^", " is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (USI)"^", " is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48s: b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (SU?)"^", " is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48s: "MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (USI)"^", " is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF + (zext(b7_4rx) * sext(b3_0ry)); }
-CMP48s: "MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (SU?)"^", " is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF + (zext(b7_4rx) * sext(b3_0ry)); }
 CMP48s: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (USI)"^", " is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB + (zext(b7_4rx) * sext(b3_0ry)); }
-CMP48s: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SU?)"^", " is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB + (zext(b7_4rx) * sext(b3_0ry)); }
 CMP48s: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (USF)"^", " is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (USFR)"^", " is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (USF)"^", " is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -829,13 +763,9 @@ CMP48s: "MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (USFR)"^", " is a22_22=0 & a21_20=1
 CMP48s: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (USF)"^", " is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB + ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48s: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (USFR)"^", " is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB + ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48s: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SSI)"^", " is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48s: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SS?)"^", " is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (SSI)"^", " is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48s: b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (SS?)"^", " is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48s: "MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (SSI)"^", " is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF + (sext(b7_4rx) * sext(b3_0ry)); }
-CMP48s: "MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (SS?)"^", " is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF + (sext(b7_4rx) * sext(b3_0ry)); }
 CMP48s: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SSI)"^", " is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB + (sext(b7_4rx) * sext(b3_0ry)); }
-CMP48s: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SS?)"^", " is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB + (sext(b7_4rx) * sext(b3_0ry)); }
 CMP48s: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SSF)"^", " is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SSFR)"^", " is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (SSF)"^", " is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -845,13 +775,9 @@ CMP48s: "MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (SSFR)"^", " is a22_22=0 & a21_20=1
 CMP48s: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SSF)"^", " is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB + ((sext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48s: "MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SSFR)"^", " is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB + ((sext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48s: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (UUI)"^", " is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48s: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (UU?)"^", " is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (UUI)"^", " is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48s: b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (UU?)"^", " is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48s: "MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (UUI)"^", " is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF - (zext(b7_4rx) * zext(b3_0ry)); }
-CMP48s: "MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (UU?)"^", " is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF - (zext(b7_4rx) * zext(b3_0ry)); }
 CMP48s: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (UUI)"^", " is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB - (zext(b7_4rx) * zext(b3_0ry)); }
-CMP48s: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (UU?)"^", " is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB - (zext(b7_4rx) * zext(b3_0ry)); }
 CMP48s: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (UUF)"^", " is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (UUFR)"^", " is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (UUF)"^", " is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -861,13 +787,9 @@ CMP48s: "MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (UUFR)"^", " is a22_22=0 & a21_20=1
 CMP48s: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (UUF)"^", " is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB - ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48s: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (UUFR)"^", " is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB - ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48s: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SUI)"^", " is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48s: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (US?)"^", " is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (SUI)"^", " is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48s: b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (US?)"^", " is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48s: "MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (SUI)"^", " is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF - (sext(b7_4rx) * zext(b3_0ry)); }
-CMP48s: "MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (US?)"^", " is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF - (sext(b7_4rx) * zext(b3_0ry)); }
 CMP48s: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (SUI)"^", " is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB - (sext(b7_4rx) * zext(b3_0ry)); }
-CMP48s: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (US?)"^", " is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB - (sext(b7_4rx) * zext(b3_0ry)); }
 CMP48s: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SUF)"^", " is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SUFR)"^", " is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (SUF)"^", " is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -877,13 +799,9 @@ CMP48s: "MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (SUFR)"^", " is a22_22=0 & a21_20=1
 CMP48s: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (SUF)"^", " is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB - ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48s: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (SUFR)"^", " is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB - ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48s: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (USI)"^", " is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48s: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SU?)"^", " is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (USI)"^", " is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48s: b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (SU?)"^", " is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48s: "MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (USI)"^", " is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF - (zext(b7_4rx) * sext(b3_0ry)); }
-CMP48s: "MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (SU?)"^", " is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF - (zext(b7_4rx) * sext(b3_0ry)); }
 CMP48s: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (USI)"^", " is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB - (zext(b7_4rx) * sext(b3_0ry)); }
-CMP48s: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (SU?)"^", " is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB - (zext(b7_4rx) * sext(b3_0ry)); }
 CMP48s: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (USF)"^", " is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (USFR)"^", " is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (USF)"^", " is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -893,13 +811,9 @@ CMP48s: "MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (USFR)"^", " is a22_22=0 & a21_20=1
 CMP48s: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (USF)"^", " is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB - ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48s: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (USFR)"^", " is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB - ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48s: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SSI)"^", " is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48s: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SS?)"^", " is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (SSI)"^", " is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48s: b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (SS?)"^", " is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48s: "MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (SSI)"^", " is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF - (sext(b7_4rx) * sext(b3_0ry)); }
-CMP48s: "MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (SS?)"^", " is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF - (sext(b7_4rx) * sext(b3_0ry)); }
 CMP48s: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (SSI)"^", " is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB - (sext(b7_4rx) * sext(b3_0ry)); }
-CMP48s: "MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (SS?)"^", " is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB - (sext(b7_4rx) * sext(b3_0ry)); }
 CMP48s: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SSF)"^", " is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SSFR)"^", " is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48s: b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (SSF)"^", " is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -1021,6 +935,7 @@ CMP48p: ", "^b11_8fnN^" = MAX("^b7_4fxN^", "^b3_0fyN^")" is a22_22=0 & a21_20=0 
 CMP48p: ", "^b11_8fnN^" = CLIP "^b7_4fxN^" BY "^b3_0fyN is a22_22=0 & a21_20=0 & a19_16=0xe ; b15_12=0x3 & b11_8fnN & b11_8rn & b3_0fyN & b3_0ry & b7_4fxN & b7_4rx { b11_8rn = fclip(b7_4rx, b3_0ry); setflt(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = "^b7_4rx^" + "^b3_0ry^", "^b15_12rs^" = "^b7_4_d1^" - "^b3_0_d2 is a22_22=0 & a21_20=0 & a19_16=0x7 ; b11_8rn & b15_12rs & b3_0_d2 & b3_0ry & b7_4_d1 & b7_4rx { local ta:4 = b7_4rx + b3_0ry; local ts:4 = b7_4rx - b3_0ry; b11_8rn = ta; b15_12rs = ts; }
 CMP48p: ", "^b11_8fnN^" = "^b7_4fxN^" + "^b3_0fyN^", "^b15_12fsN^" = "^b7_4_d3^" - "^b3_0_d4 is a22_22=0 & a21_20=0 & a19_16=0xf ; b11_8fnN & b11_8rn & b15_12fsN & b15_12rs & b3_0_d4 & b3_0fyN & b3_0ry & b7_4_d3 & b7_4fxN & b7_4rx { local ta:4 = b7_4rx f+ b3_0ry; local ts:4 = b7_4rx f- b3_0ry; b11_8rn = ta; b15_12rs = ts; }
+CMP48p: ", "^b11_8rn^" = SAT MRF (UI)" is a22_22=0 & a21_20=1 & a19_16=0x0 ; b15_12=0x0 & b11_8rn { b11_8rn = mrop(0x0:4); }
 CMP48p: ", "^b11_8rn^" = SAT MRF (SI)" is a22_22=0 & a21_20=1 & a19_16=0x0 ; b15_12=0x1 & b11_8rn { b11_8rn = mrop(0x1:4); }
 CMP48p: ", "^b11_8rn^" = SAT MRB (UI)" is a22_22=0 & a21_20=1 & a19_16=0x0 ; b15_12=0x2 & b11_8rn { b11_8rn = mrop(0x2:4); }
 CMP48p: ", "^b11_8rn^" = SAT MRB (SI)" is a22_22=0 & a21_20=1 & a19_16=0x0 ; b15_12=0x3 & b11_8rn { b11_8rn = mrop(0x3:4); }
@@ -1048,11 +963,8 @@ CMP48p: ", "^"MRB = RND MRB (UF)" is a22_22=0 & a21_20=1 & a19_16=0x1 ; b15_12=0
 CMP48p: ", "^"MRB = RND MRB (SF)" is a22_22=0 & a21_20=1 & a19_16=0x1 ; b15_12=0xf { mrop(0x1f:4); }
 CMP48p: ", "^b11_8fnN^" = "^b7_4fxN^" * "^b3_0fyN is a22_22=0 & a21_20=1 & a19_16=0x3 ; b15_12=0x0 & b11_8fnN & b11_8rn & b3_0fyN & b3_0ry & b7_4fxN & b7_4rx { b11_8rn = b7_4rx f* b3_0ry; setfmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48p: ", "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48p: ", "^"MRF = "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = (zext(b7_4rx) * zext(b3_0ry)); }
-CMP48p: ", "^"MRF = "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = (zext(b7_4rx) * zext(b3_0ry)); }
 CMP48p: ", "^"MRB = "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = (zext(b7_4rx) * zext(b3_0ry)); }
-CMP48p: ", "^"MRB = "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = (zext(b7_4rx) * zext(b3_0ry)); }
 CMP48p: ", "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48p: ", "^"MRF = "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0xc & b3_0ry & b7_4rx { MRF = ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
@@ -1060,11 +972,8 @@ CMP48p: ", "^"MRF = "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21_20=1 & a19
 CMP48p: ", "^"MRB = "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0xe & b3_0ry & b7_4rx { MRB = ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48p: ", "^"MRB = "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0xf & b3_0ry & b7_4rx { MRB = ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48p: ", "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48p: ", "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48p: ", "^"MRF = "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = (sext(b7_4rx) * zext(b3_0ry)); }
-CMP48p: ", "^"MRF = "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = (sext(b7_4rx) * zext(b3_0ry)); }
 CMP48p: ", "^"MRB = "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = (sext(b7_4rx) * zext(b3_0ry)); }
-CMP48p: ", "^"MRB = "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = (sext(b7_4rx) * zext(b3_0ry)); }
 CMP48p: ", "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48p: ", "^"MRF = "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0xc & b3_0ry & b7_4rx { MRF = ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
@@ -1072,11 +981,8 @@ CMP48p: ", "^"MRF = "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21_20=1 & a19
 CMP48p: ", "^"MRB = "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0xe & b3_0ry & b7_4rx { MRB = ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48p: ", "^"MRB = "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0xf & b3_0ry & b7_4rx { MRB = ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48p: ", "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48p: ", "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48p: ", "^"MRF = "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = (zext(b7_4rx) * sext(b3_0ry)); }
-CMP48p: ", "^"MRF = "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = (zext(b7_4rx) * sext(b3_0ry)); }
 CMP48p: ", "^"MRB = "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = (zext(b7_4rx) * sext(b3_0ry)); }
-CMP48p: ", "^"MRB = "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = (zext(b7_4rx) * sext(b3_0ry)); }
 CMP48p: ", "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48p: ", "^"MRF = "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0xc & b3_0ry & b7_4rx { MRF = ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
@@ -1084,11 +990,8 @@ CMP48p: ", "^"MRF = "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21_20=1 & a19
 CMP48p: ", "^"MRB = "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0xe & b3_0ry & b7_4rx { MRB = ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48p: ", "^"MRB = "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0xf & b3_0ry & b7_4rx { MRB = ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48p: ", "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48p: ", "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48p: ", "^"MRF = "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = (sext(b7_4rx) * sext(b3_0ry)); }
-CMP48p: ", "^"MRF = "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = (sext(b7_4rx) * sext(b3_0ry)); }
 CMP48p: ", "^"MRB = "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = (sext(b7_4rx) * sext(b3_0ry)); }
-CMP48p: ", "^"MRB = "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = (sext(b7_4rx) * sext(b3_0ry)); }
 CMP48p: ", "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SSF)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SSFR)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48p: ", "^"MRF = "^b7_4rx^" * "^b3_0ry^" (SSF)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0xc & b3_0ry & b7_4rx { MRF = ((sext(b7_4rx) * sext(b3_0ry)) << 1); }
@@ -1096,13 +999,9 @@ CMP48p: ", "^"MRF = "^b7_4rx^" * "^b3_0ry^" (SSFR)" is a22_22=0 & a21_20=1 & a19
 CMP48p: ", "^"MRB = "^b7_4rx^" * "^b3_0ry^" (SSF)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0xe & b3_0ry & b7_4rx { MRB = ((sext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48p: ", "^"MRB = "^b7_4rx^" * "^b3_0ry^" (SSFR)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0xf & b3_0ry & b7_4rx { MRB = ((sext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48p: ", "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48p: ", "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48p: ", "^b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48p: ", "^"MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF + (zext(b7_4rx) * zext(b3_0ry)); }
-CMP48p: ", "^"MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF + (zext(b7_4rx) * zext(b3_0ry)); }
 CMP48p: ", "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB + (zext(b7_4rx) * zext(b3_0ry)); }
-CMP48p: ", "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB + (zext(b7_4rx) * zext(b3_0ry)); }
 CMP48p: ", "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -1112,13 +1011,9 @@ CMP48p: ", "^"MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21_20=1
 CMP48p: ", "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB + ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48p: ", "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB + ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48p: ", "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48p: ", "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48p: ", "^b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48p: ", "^"MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF + (sext(b7_4rx) * zext(b3_0ry)); }
-CMP48p: ", "^"MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF + (sext(b7_4rx) * zext(b3_0ry)); }
 CMP48p: ", "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB + (sext(b7_4rx) * zext(b3_0ry)); }
-CMP48p: ", "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB + (sext(b7_4rx) * zext(b3_0ry)); }
 CMP48p: ", "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -1128,13 +1023,9 @@ CMP48p: ", "^"MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21_20=1
 CMP48p: ", "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB + ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48p: ", "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB + ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48p: ", "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48p: ", "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48p: ", "^b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48p: ", "^"MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF + (zext(b7_4rx) * sext(b3_0ry)); }
-CMP48p: ", "^"MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF + (zext(b7_4rx) * sext(b3_0ry)); }
 CMP48p: ", "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB + (zext(b7_4rx) * sext(b3_0ry)); }
-CMP48p: ", "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB + (zext(b7_4rx) * sext(b3_0ry)); }
 CMP48p: ", "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -1144,13 +1035,9 @@ CMP48p: ", "^"MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21_20=1
 CMP48p: ", "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB + ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48p: ", "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB + ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48p: ", "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48p: ", "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48p: ", "^b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48p: ", "^"MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF + (sext(b7_4rx) * sext(b3_0ry)); }
-CMP48p: ", "^"MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF + (sext(b7_4rx) * sext(b3_0ry)); }
 CMP48p: ", "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB + (sext(b7_4rx) * sext(b3_0ry)); }
-CMP48p: ", "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB + (sext(b7_4rx) * sext(b3_0ry)); }
 CMP48p: ", "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SSF)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SSFR)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (SSF)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -1160,13 +1047,9 @@ CMP48p: ", "^"MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (SSFR)" is a22_22=0 & a21_20=1
 CMP48p: ", "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SSF)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB + ((sext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48p: ", "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SSFR)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB + ((sext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48p: ", "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48p: ", "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48p: ", "^b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48p: ", "^"MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF - (zext(b7_4rx) * zext(b3_0ry)); }
-CMP48p: ", "^"MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF - (zext(b7_4rx) * zext(b3_0ry)); }
 CMP48p: ", "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB - (zext(b7_4rx) * zext(b3_0ry)); }
-CMP48p: ", "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB - (zext(b7_4rx) * zext(b3_0ry)); }
 CMP48p: ", "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -1176,13 +1059,9 @@ CMP48p: ", "^"MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21_20=1
 CMP48p: ", "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB - ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48p: ", "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB - ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48p: ", "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48p: ", "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48p: ", "^b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48p: ", "^"MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF - (sext(b7_4rx) * zext(b3_0ry)); }
-CMP48p: ", "^"MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF - (sext(b7_4rx) * zext(b3_0ry)); }
 CMP48p: ", "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB - (sext(b7_4rx) * zext(b3_0ry)); }
-CMP48p: ", "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB - (sext(b7_4rx) * zext(b3_0ry)); }
 CMP48p: ", "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -1192,13 +1071,9 @@ CMP48p: ", "^"MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21_20=1
 CMP48p: ", "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB - ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48p: ", "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB - ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48p: ", "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48p: ", "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48p: ", "^b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48p: ", "^"MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF - (zext(b7_4rx) * sext(b3_0ry)); }
-CMP48p: ", "^"MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF - (zext(b7_4rx) * sext(b3_0ry)); }
 CMP48p: ", "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB - (zext(b7_4rx) * sext(b3_0ry)); }
-CMP48p: ", "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB - (zext(b7_4rx) * sext(b3_0ry)); }
 CMP48p: ", "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -1208,13 +1083,9 @@ CMP48p: ", "^"MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21_20=1
 CMP48p: ", "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB - ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48p: ", "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB - ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48p: ", "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48p: ", "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48p: ", "^b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48p: ", "^"MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF - (sext(b7_4rx) * sext(b3_0ry)); }
-CMP48p: ", "^"MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF - (sext(b7_4rx) * sext(b3_0ry)); }
 CMP48p: ", "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB - (sext(b7_4rx) * sext(b3_0ry)); }
-CMP48p: ", "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB - (sext(b7_4rx) * sext(b3_0ry)); }
 CMP48p: ", "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SSF)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SSFR)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48p: ", "^b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (SSF)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -1336,6 +1207,7 @@ CMP48e: ", ELSE "^b11_8fnN^" = MAX("^b7_4fxN^", "^b3_0fyN^")" is a22_22=0 & a21_
 CMP48e: ", ELSE "^b11_8fnN^" = CLIP "^b7_4fxN^" BY "^b3_0fyN is a22_22=0 & a21_20=0 & a19_16=0xe ; b15_12=0x3 & b11_8fnN & b11_8rn & b3_0fyN & b3_0ry & b7_4fxN & b7_4rx { b11_8rn = fclip(b7_4rx, b3_0ry); setflt(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = "^b7_4rx^" + "^b3_0ry^", "^b15_12rs^" = "^b7_4_d1^" - "^b3_0_d2 is a22_22=0 & a21_20=0 & a19_16=0x7 ; b11_8rn & b15_12rs & b3_0_d2 & b3_0ry & b7_4_d1 & b7_4rx { local ta:4 = b7_4rx + b3_0ry; local ts:4 = b7_4rx - b3_0ry; b11_8rn = ta; b15_12rs = ts; }
 CMP48e: ", ELSE "^b11_8fnN^" = "^b7_4fxN^" + "^b3_0fyN^", "^b15_12fsN^" = "^b7_4_d3^" - "^b3_0_d4 is a22_22=0 & a21_20=0 & a19_16=0xf ; b11_8fnN & b11_8rn & b15_12fsN & b15_12rs & b3_0_d4 & b3_0fyN & b3_0ry & b7_4_d3 & b7_4fxN & b7_4rx { local ta:4 = b7_4rx f+ b3_0ry; local ts:4 = b7_4rx f- b3_0ry; b11_8rn = ta; b15_12rs = ts; }
+CMP48e: ", ELSE "^b11_8rn^" = SAT MRF (UI)" is a22_22=0 & a21_20=1 & a19_16=0x0 ; b15_12=0x0 & b11_8rn { b11_8rn = mrop(0x0:4); }
 CMP48e: ", ELSE "^b11_8rn^" = SAT MRF (SI)" is a22_22=0 & a21_20=1 & a19_16=0x0 ; b15_12=0x1 & b11_8rn { b11_8rn = mrop(0x1:4); }
 CMP48e: ", ELSE "^b11_8rn^" = SAT MRB (UI)" is a22_22=0 & a21_20=1 & a19_16=0x0 ; b15_12=0x2 & b11_8rn { b11_8rn = mrop(0x2:4); }
 CMP48e: ", ELSE "^b11_8rn^" = SAT MRB (SI)" is a22_22=0 & a21_20=1 & a19_16=0x0 ; b15_12=0x3 & b11_8rn { b11_8rn = mrop(0x3:4); }
@@ -1363,11 +1235,8 @@ CMP48e: ", ELSE "^"MRB = RND MRB (UF)" is a22_22=0 & a21_20=1 & a19_16=0x1 ; b15
 CMP48e: ", ELSE "^"MRB = RND MRB (SF)" is a22_22=0 & a21_20=1 & a19_16=0x1 ; b15_12=0xf { mrop(0x1f:4); }
 CMP48e: ", ELSE "^b11_8fnN^" = "^b7_4fxN^" * "^b3_0fyN is a22_22=0 & a21_20=1 & a19_16=0x3 ; b15_12=0x0 & b11_8fnN & b11_8rn & b3_0fyN & b3_0ry & b7_4fxN & b7_4rx { b11_8rn = b7_4rx f* b3_0ry; setfmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48e: ", ELSE "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48e: ", ELSE "^"MRF = "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = (zext(b7_4rx) * zext(b3_0ry)); }
-CMP48e: ", ELSE "^"MRF = "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = (zext(b7_4rx) * zext(b3_0ry)); }
 CMP48e: ", ELSE "^"MRB = "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = (zext(b7_4rx) * zext(b3_0ry)); }
-CMP48e: ", ELSE "^"MRB = "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = (zext(b7_4rx) * zext(b3_0ry)); }
 CMP48e: ", ELSE "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48e: ", ELSE "^"MRF = "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0xc & b3_0ry & b7_4rx { MRF = ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
@@ -1375,11 +1244,8 @@ CMP48e: ", ELSE "^"MRF = "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21_20=1 
 CMP48e: ", ELSE "^"MRB = "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0xe & b3_0ry & b7_4rx { MRB = ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48e: ", ELSE "^"MRB = "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21_20=1 & a19_16=0x4 ; b15_12=0xf & b3_0ry & b7_4rx { MRB = ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48e: ", ELSE "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48e: ", ELSE "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48e: ", ELSE "^"MRF = "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = (sext(b7_4rx) * zext(b3_0ry)); }
-CMP48e: ", ELSE "^"MRF = "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = (sext(b7_4rx) * zext(b3_0ry)); }
 CMP48e: ", ELSE "^"MRB = "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = (sext(b7_4rx) * zext(b3_0ry)); }
-CMP48e: ", ELSE "^"MRB = "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = (sext(b7_4rx) * zext(b3_0ry)); }
 CMP48e: ", ELSE "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48e: ", ELSE "^"MRF = "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0xc & b3_0ry & b7_4rx { MRF = ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
@@ -1387,11 +1253,8 @@ CMP48e: ", ELSE "^"MRF = "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21_20=1 
 CMP48e: ", ELSE "^"MRB = "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0xe & b3_0ry & b7_4rx { MRB = ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48e: ", ELSE "^"MRB = "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21_20=1 & a19_16=0x5 ; b15_12=0xf & b3_0ry & b7_4rx { MRB = ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48e: ", ELSE "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48e: ", ELSE "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48e: ", ELSE "^"MRF = "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = (zext(b7_4rx) * sext(b3_0ry)); }
-CMP48e: ", ELSE "^"MRF = "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = (zext(b7_4rx) * sext(b3_0ry)); }
 CMP48e: ", ELSE "^"MRB = "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = (zext(b7_4rx) * sext(b3_0ry)); }
-CMP48e: ", ELSE "^"MRB = "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = (zext(b7_4rx) * sext(b3_0ry)); }
 CMP48e: ", ELSE "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48e: ", ELSE "^"MRF = "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0xc & b3_0ry & b7_4rx { MRF = ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
@@ -1399,11 +1262,8 @@ CMP48e: ", ELSE "^"MRF = "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21_20=1 
 CMP48e: ", ELSE "^"MRB = "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0xe & b3_0ry & b7_4rx { MRB = ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48e: ", ELSE "^"MRB = "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21_20=1 & a19_16=0x6 ; b15_12=0xf & b3_0ry & b7_4rx { MRB = ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48e: ", ELSE "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48e: ", ELSE "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48e: ", ELSE "^"MRF = "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = (sext(b7_4rx) * sext(b3_0ry)); }
-CMP48e: ", ELSE "^"MRF = "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = (sext(b7_4rx) * sext(b3_0ry)); }
 CMP48e: ", ELSE "^"MRB = "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = (sext(b7_4rx) * sext(b3_0ry)); }
-CMP48e: ", ELSE "^"MRB = "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = (sext(b7_4rx) * sext(b3_0ry)); }
 CMP48e: ", ELSE "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SSF)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = "^b7_4rx^" * "^b3_0ry^" (SSFR)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48e: ", ELSE "^"MRF = "^b7_4rx^" * "^b3_0ry^" (SSF)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0xc & b3_0ry & b7_4rx { MRF = ((sext(b7_4rx) * sext(b3_0ry)) << 1); }
@@ -1411,13 +1271,9 @@ CMP48e: ", ELSE "^"MRF = "^b7_4rx^" * "^b3_0ry^" (SSFR)" is a22_22=0 & a21_20=1 
 CMP48e: ", ELSE "^"MRB = "^b7_4rx^" * "^b3_0ry^" (SSF)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0xe & b3_0ry & b7_4rx { MRB = ((sext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48e: ", ELSE "^"MRB = "^b7_4rx^" * "^b3_0ry^" (SSFR)" is a22_22=0 & a21_20=1 & a19_16=0x7 ; b15_12=0xf & b3_0ry & b7_4rx { MRB = ((sext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48e: ", ELSE "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48e: ", ELSE "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48e: ", ELSE "^b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48e: ", ELSE "^"MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF + (zext(b7_4rx) * zext(b3_0ry)); }
-CMP48e: ", ELSE "^"MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF + (zext(b7_4rx) * zext(b3_0ry)); }
 CMP48e: ", ELSE "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB + (zext(b7_4rx) * zext(b3_0ry)); }
-CMP48e: ", ELSE "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB + (zext(b7_4rx) * zext(b3_0ry)); }
 CMP48e: ", ELSE "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -1427,13 +1283,9 @@ CMP48e: ", ELSE "^"MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21
 CMP48e: ", ELSE "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB + ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48e: ", ELSE "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21_20=1 & a19_16=0x8 ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB + ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48e: ", ELSE "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48e: ", ELSE "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48e: ", ELSE "^b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48e: ", ELSE "^"MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF + (sext(b7_4rx) * zext(b3_0ry)); }
-CMP48e: ", ELSE "^"MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF + (sext(b7_4rx) * zext(b3_0ry)); }
 CMP48e: ", ELSE "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB + (sext(b7_4rx) * zext(b3_0ry)); }
-CMP48e: ", ELSE "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB + (sext(b7_4rx) * zext(b3_0ry)); }
 CMP48e: ", ELSE "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -1443,13 +1295,9 @@ CMP48e: ", ELSE "^"MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21
 CMP48e: ", ELSE "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB + ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48e: ", ELSE "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21_20=1 & a19_16=0x9 ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB + ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48e: ", ELSE "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48e: ", ELSE "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48e: ", ELSE "^b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48e: ", ELSE "^"MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF + (zext(b7_4rx) * sext(b3_0ry)); }
-CMP48e: ", ELSE "^"MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF + (zext(b7_4rx) * sext(b3_0ry)); }
 CMP48e: ", ELSE "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB + (zext(b7_4rx) * sext(b3_0ry)); }
-CMP48e: ", ELSE "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB + (zext(b7_4rx) * sext(b3_0ry)); }
 CMP48e: ", ELSE "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -1459,13 +1307,9 @@ CMP48e: ", ELSE "^"MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21
 CMP48e: ", ELSE "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB + ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48e: ", ELSE "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21_20=1 & a19_16=0xa ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB + ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48e: ", ELSE "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48e: ", ELSE "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48e: ", ELSE "^b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48e: ", ELSE "^"MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF + (sext(b7_4rx) * sext(b3_0ry)); }
-CMP48e: ", ELSE "^"MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF + (sext(b7_4rx) * sext(b3_0ry)); }
 CMP48e: ", ELSE "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB + (sext(b7_4rx) * sext(b3_0ry)); }
-CMP48e: ", ELSE "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB + (sext(b7_4rx) * sext(b3_0ry)); }
 CMP48e: ", ELSE "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SSF)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = MRF + "^b7_4rx^" * "^b3_0ry^" (SSFR)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF + ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = MRB + "^b7_4rx^" * "^b3_0ry^" (SSF)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB + ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -1475,13 +1319,9 @@ CMP48e: ", ELSE "^"MRF = MRF + "^b7_4rx^" * "^b3_0ry^" (SSFR)" is a22_22=0 & a21
 CMP48e: ", ELSE "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SSF)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB + ((sext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48e: ", ELSE "^"MRB = MRB + "^b7_4rx^" * "^b3_0ry^" (SSFR)" is a22_22=0 & a21_20=1 & a19_16=0xb ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB + ((sext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48e: ", ELSE "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48e: ", ELSE "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48e: ", ELSE "^b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (zext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48e: ", ELSE "^"MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF - (zext(b7_4rx) * zext(b3_0ry)); }
-CMP48e: ", ELSE "^"MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF - (zext(b7_4rx) * zext(b3_0ry)); }
 CMP48e: ", ELSE "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (UUI)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB - (zext(b7_4rx) * zext(b3_0ry)); }
-CMP48e: ", ELSE "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (UU?)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB - (zext(b7_4rx) * zext(b3_0ry)); }
 CMP48e: ", ELSE "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - ((zext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -1491,13 +1331,9 @@ CMP48e: ", ELSE "^"MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21
 CMP48e: ", ELSE "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (UUF)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB - ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48e: ", ELSE "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (UUFR)" is a22_22=0 & a21_20=1 & a19_16=0xc ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB - ((zext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48e: ", ELSE "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48e: ", ELSE "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48e: ", ELSE "^b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (sext(b7_4rx) * zext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48e: ", ELSE "^"MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF - (sext(b7_4rx) * zext(b3_0ry)); }
-CMP48e: ", ELSE "^"MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF - (sext(b7_4rx) * zext(b3_0ry)); }
 CMP48e: ", ELSE "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (SUI)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB - (sext(b7_4rx) * zext(b3_0ry)); }
-CMP48e: ", ELSE "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (US?)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB - (sext(b7_4rx) * zext(b3_0ry)); }
 CMP48e: ", ELSE "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - ((sext(b7_4rx) * zext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -1507,13 +1343,9 @@ CMP48e: ", ELSE "^"MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21
 CMP48e: ", ELSE "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (SUF)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB - ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48e: ", ELSE "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (SUFR)" is a22_22=0 & a21_20=1 & a19_16=0xd ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB - ((sext(b7_4rx) * zext(b3_0ry)) << 1); }
 CMP48e: ", ELSE "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48e: ", ELSE "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48e: ", ELSE "^b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (zext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48e: ", ELSE "^"MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF - (zext(b7_4rx) * sext(b3_0ry)); }
-CMP48e: ", ELSE "^"MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF - (zext(b7_4rx) * sext(b3_0ry)); }
 CMP48e: ", ELSE "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (USI)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB - (zext(b7_4rx) * sext(b3_0ry)); }
-CMP48e: ", ELSE "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (SU?)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB - (zext(b7_4rx) * sext(b3_0ry)); }
 CMP48e: ", ELSE "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - ((zext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -1523,13 +1355,9 @@ CMP48e: ", ELSE "^"MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21
 CMP48e: ", ELSE "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (USF)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0xe & b3_0ry & b7_4rx { MRB = MRB - ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48e: ", ELSE "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (USFR)" is a22_22=0 & a21_20=1 & a19_16=0xe ; b15_12=0xf & b3_0ry & b7_4rx { MRB = MRB - ((zext(b7_4rx) * sext(b3_0ry)) << 1); }
 CMP48e: ", ELSE "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x0 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48e: ", ELSE "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x1 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x2 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
-CMP48e: ", ELSE "^b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x3 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - (sext(b7_4rx) * sext(b3_0ry)); b11_8rn = p(0); setmul(b11_8rn); }
 CMP48e: ", ELSE "^"MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x4 & b3_0ry & b7_4rx { MRF = MRF - (sext(b7_4rx) * sext(b3_0ry)); }
-CMP48e: ", ELSE "^"MRF = MRF - "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x5 & b3_0ry & b7_4rx { MRF = MRF - (sext(b7_4rx) * sext(b3_0ry)); }
 CMP48e: ", ELSE "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (SSI)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x6 & b3_0ry & b7_4rx { MRB = MRB - (sext(b7_4rx) * sext(b3_0ry)); }
-CMP48e: ", ELSE "^"MRB = MRB - "^b7_4rx^" * "^b3_0ry^" (SS?)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x7 & b3_0ry & b7_4rx { MRB = MRB - (sext(b7_4rx) * sext(b3_0ry)); }
 CMP48e: ", ELSE "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SSF)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x8 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = MRF - "^b7_4rx^" * "^b3_0ry^" (SSFR)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0x9 & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRF - ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
 CMP48e: ", ELSE "^b11_8rn^" = MRB - "^b7_4rx^" * "^b3_0ry^" (SSF)" is a22_22=0 & a21_20=1 & a19_16=0xf ; b15_12=0xa & b11_8rn & b3_0ry & b7_4rx { local p:8 = MRB - ((sext(b7_4rx) * sext(b3_0ry)) << 1); b11_8rn = p(4); setmul(b11_8rn); }
@@ -1651,6 +1479,7 @@ CMP2B: a27_24fnN^" = MAX("^a23_20fxN^", "^a19_16fyN^")" is a38_38=0 & a37_36=0 &
 CMP2B: a27_24fnN^" = CLIP "^a23_20fxN^" BY "^a19_16fyN is a38_38=0 & a37_36=0 & a35_28=0xe3 & a19_16fyN & a19_16ry & a23_20fxN & a23_20rx & a27_24fnN & a27_24rn { a27_24rn = fclip(a23_20rx, a19_16ry); setflt(a27_24rn); }
 CMP2B: a27_24rn^" = "^a23_20rx^" + "^a19_16ry^", "^a31_28rs^" = "^a23_20_d13^" - "^a19_16_d14 is a38_38=0 & a37_36=0 & a35_32=0x7 & a19_16_d14 & a19_16ry & a23_20_d13 & a23_20rx & a27_24rn & a31_28rs { local ta:4 = a23_20rx + a19_16ry; local ts:4 = a23_20rx - a19_16ry; a27_24rn = ta; a31_28rs = ts; }
 CMP2B: a27_24fnN^" = "^a23_20fxN^" + "^a19_16fyN^", "^a31_28fsN^" = "^a23_20_d15^" - "^a19_16_d16 is a38_38=0 & a37_36=0 & a35_32=0xf & a19_16_d16 & a19_16fyN & a19_16ry & a23_20_d15 & a23_20fxN & a23_20rx & a27_24fnN & a27_24rn & a31_28fsN & a31_28rs { local ta:4 = a23_20rx f+ a19_16ry; local ts:4 = a23_20rx f- a19_16ry; a27_24rn = ta; a31_28rs = ts; }
+CMP2B: a27_24rn^" = SAT MRF (UI)" is a38_38=0 & a37_36=1 & a35_28=0x0 & a27_24rn { a27_24rn = mrop(0x0:4); }
 CMP2B: a27_24rn^" = SAT MRF (SI)" is a38_38=0 & a37_36=1 & a35_28=0x1 & a27_24rn { a27_24rn = mrop(0x1:4); }
 CMP2B: a27_24rn^" = SAT MRB (UI)" is a38_38=0 & a37_36=1 & a35_28=0x2 & a27_24rn { a27_24rn = mrop(0x2:4); }
 CMP2B: a27_24rn^" = SAT MRB (SI)" is a38_38=0 & a37_36=1 & a35_28=0x3 & a27_24rn { a27_24rn = mrop(0x3:4); }
@@ -1678,11 +1507,8 @@ CMP2B: "MRB = RND MRB (UF)" is a38_38=0 & a37_36=1 & a35_28=0x1e { mrop(0x1e:4);
 CMP2B: "MRB = RND MRB (SF)" is a38_38=0 & a37_36=1 & a35_28=0x1f { mrop(0x1f:4); }
 CMP2B: a27_24fnN^" = "^a23_20fxN^" * "^a19_16fyN is a38_38=0 & a37_36=1 & a35_28=0x30 & a19_16fyN & a19_16ry & a23_20fxN & a23_20rx & a27_24fnN & a27_24rn { a27_24rn = a23_20rx f* a19_16ry; setfmul(a27_24rn); }
 CMP2B: a27_24rn^" = "^a23_20rx^" * "^a19_16ry^" (UUI)" is a38_38=0 & a37_36=1 & a35_28=0x40 & a19_16ry & a23_20rx & a27_24rn { local p:8 = (zext(a23_20rx) * zext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
-CMP2B: a27_24rn^" = "^a23_20rx^" * "^a19_16ry^" (UU?)" is a38_38=0 & a37_36=1 & a35_28=0x41 & a19_16ry & a23_20rx & a27_24rn { local p:8 = (zext(a23_20rx) * zext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
 CMP2B: "MRF = "^a23_20rx^" * "^a19_16ry^" (UUI)" is a38_38=0 & a37_36=1 & a35_28=0x44 & a19_16ry & a23_20rx { MRF = (zext(a23_20rx) * zext(a19_16ry)); }
-CMP2B: "MRF = "^a23_20rx^" * "^a19_16ry^" (UU?)" is a38_38=0 & a37_36=1 & a35_28=0x45 & a19_16ry & a23_20rx { MRF = (zext(a23_20rx) * zext(a19_16ry)); }
 CMP2B: "MRB = "^a23_20rx^" * "^a19_16ry^" (UUI)" is a38_38=0 & a37_36=1 & a35_28=0x46 & a19_16ry & a23_20rx { MRB = (zext(a23_20rx) * zext(a19_16ry)); }
-CMP2B: "MRB = "^a23_20rx^" * "^a19_16ry^" (UU?)" is a38_38=0 & a37_36=1 & a35_28=0x47 & a19_16ry & a23_20rx { MRB = (zext(a23_20rx) * zext(a19_16ry)); }
 CMP2B: a27_24rn^" = "^a23_20rx^" * "^a19_16ry^" (UUF)" is a38_38=0 & a37_36=1 & a35_28=0x48 & a19_16ry & a23_20rx & a27_24rn { local p:8 = ((zext(a23_20rx) * zext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = "^a23_20rx^" * "^a19_16ry^" (UUFR)" is a38_38=0 & a37_36=1 & a35_28=0x49 & a19_16ry & a23_20rx & a27_24rn { local p:8 = ((zext(a23_20rx) * zext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
 CMP2B: "MRF = "^a23_20rx^" * "^a19_16ry^" (UUF)" is a38_38=0 & a37_36=1 & a35_28=0x4c & a19_16ry & a23_20rx { MRF = ((zext(a23_20rx) * zext(a19_16ry)) << 1); }
@@ -1690,11 +1516,8 @@ CMP2B: "MRF = "^a23_20rx^" * "^a19_16ry^" (UUFR)" is a38_38=0 & a37_36=1 & a35_2
 CMP2B: "MRB = "^a23_20rx^" * "^a19_16ry^" (UUF)" is a38_38=0 & a37_36=1 & a35_28=0x4e & a19_16ry & a23_20rx { MRB = ((zext(a23_20rx) * zext(a19_16ry)) << 1); }
 CMP2B: "MRB = "^a23_20rx^" * "^a19_16ry^" (UUFR)" is a38_38=0 & a37_36=1 & a35_28=0x4f & a19_16ry & a23_20rx { MRB = ((zext(a23_20rx) * zext(a19_16ry)) << 1); }
 CMP2B: a27_24rn^" = "^a23_20rx^" * "^a19_16ry^" (SUI)" is a38_38=0 & a37_36=1 & a35_28=0x50 & a19_16ry & a23_20rx & a27_24rn { local p:8 = (sext(a23_20rx) * zext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
-CMP2B: a27_24rn^" = "^a23_20rx^" * "^a19_16ry^" (US?)" is a38_38=0 & a37_36=1 & a35_28=0x51 & a19_16ry & a23_20rx & a27_24rn { local p:8 = (sext(a23_20rx) * zext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
 CMP2B: "MRF = "^a23_20rx^" * "^a19_16ry^" (SUI)" is a38_38=0 & a37_36=1 & a35_28=0x54 & a19_16ry & a23_20rx { MRF = (sext(a23_20rx) * zext(a19_16ry)); }
-CMP2B: "MRF = "^a23_20rx^" * "^a19_16ry^" (US?)" is a38_38=0 & a37_36=1 & a35_28=0x55 & a19_16ry & a23_20rx { MRF = (sext(a23_20rx) * zext(a19_16ry)); }
 CMP2B: "MRB = "^a23_20rx^" * "^a19_16ry^" (SUI)" is a38_38=0 & a37_36=1 & a35_28=0x56 & a19_16ry & a23_20rx { MRB = (sext(a23_20rx) * zext(a19_16ry)); }
-CMP2B: "MRB = "^a23_20rx^" * "^a19_16ry^" (US?)" is a38_38=0 & a37_36=1 & a35_28=0x57 & a19_16ry & a23_20rx { MRB = (sext(a23_20rx) * zext(a19_16ry)); }
 CMP2B: a27_24rn^" = "^a23_20rx^" * "^a19_16ry^" (SUF)" is a38_38=0 & a37_36=1 & a35_28=0x58 & a19_16ry & a23_20rx & a27_24rn { local p:8 = ((sext(a23_20rx) * zext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = "^a23_20rx^" * "^a19_16ry^" (SUFR)" is a38_38=0 & a37_36=1 & a35_28=0x59 & a19_16ry & a23_20rx & a27_24rn { local p:8 = ((sext(a23_20rx) * zext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
 CMP2B: "MRF = "^a23_20rx^" * "^a19_16ry^" (SUF)" is a38_38=0 & a37_36=1 & a35_28=0x5c & a19_16ry & a23_20rx { MRF = ((sext(a23_20rx) * zext(a19_16ry)) << 1); }
@@ -1702,11 +1525,8 @@ CMP2B: "MRF = "^a23_20rx^" * "^a19_16ry^" (SUFR)" is a38_38=0 & a37_36=1 & a35_2
 CMP2B: "MRB = "^a23_20rx^" * "^a19_16ry^" (SUF)" is a38_38=0 & a37_36=1 & a35_28=0x5e & a19_16ry & a23_20rx { MRB = ((sext(a23_20rx) * zext(a19_16ry)) << 1); }
 CMP2B: "MRB = "^a23_20rx^" * "^a19_16ry^" (SUFR)" is a38_38=0 & a37_36=1 & a35_28=0x5f & a19_16ry & a23_20rx { MRB = ((sext(a23_20rx) * zext(a19_16ry)) << 1); }
 CMP2B: a27_24rn^" = "^a23_20rx^" * "^a19_16ry^" (USI)" is a38_38=0 & a37_36=1 & a35_28=0x60 & a19_16ry & a23_20rx & a27_24rn { local p:8 = (zext(a23_20rx) * sext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
-CMP2B: a27_24rn^" = "^a23_20rx^" * "^a19_16ry^" (SU?)" is a38_38=0 & a37_36=1 & a35_28=0x61 & a19_16ry & a23_20rx & a27_24rn { local p:8 = (zext(a23_20rx) * sext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
 CMP2B: "MRF = "^a23_20rx^" * "^a19_16ry^" (USI)" is a38_38=0 & a37_36=1 & a35_28=0x64 & a19_16ry & a23_20rx { MRF = (zext(a23_20rx) * sext(a19_16ry)); }
-CMP2B: "MRF = "^a23_20rx^" * "^a19_16ry^" (SU?)" is a38_38=0 & a37_36=1 & a35_28=0x65 & a19_16ry & a23_20rx { MRF = (zext(a23_20rx) * sext(a19_16ry)); }
 CMP2B: "MRB = "^a23_20rx^" * "^a19_16ry^" (USI)" is a38_38=0 & a37_36=1 & a35_28=0x66 & a19_16ry & a23_20rx { MRB = (zext(a23_20rx) * sext(a19_16ry)); }
-CMP2B: "MRB = "^a23_20rx^" * "^a19_16ry^" (SU?)" is a38_38=0 & a37_36=1 & a35_28=0x67 & a19_16ry & a23_20rx { MRB = (zext(a23_20rx) * sext(a19_16ry)); }
 CMP2B: a27_24rn^" = "^a23_20rx^" * "^a19_16ry^" (USF)" is a38_38=0 & a37_36=1 & a35_28=0x68 & a19_16ry & a23_20rx & a27_24rn { local p:8 = ((zext(a23_20rx) * sext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = "^a23_20rx^" * "^a19_16ry^" (USFR)" is a38_38=0 & a37_36=1 & a35_28=0x69 & a19_16ry & a23_20rx & a27_24rn { local p:8 = ((zext(a23_20rx) * sext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
 CMP2B: "MRF = "^a23_20rx^" * "^a19_16ry^" (USF)" is a38_38=0 & a37_36=1 & a35_28=0x6c & a19_16ry & a23_20rx { MRF = ((zext(a23_20rx) * sext(a19_16ry)) << 1); }
@@ -1714,11 +1534,8 @@ CMP2B: "MRF = "^a23_20rx^" * "^a19_16ry^" (USFR)" is a38_38=0 & a37_36=1 & a35_2
 CMP2B: "MRB = "^a23_20rx^" * "^a19_16ry^" (USF)" is a38_38=0 & a37_36=1 & a35_28=0x6e & a19_16ry & a23_20rx { MRB = ((zext(a23_20rx) * sext(a19_16ry)) << 1); }
 CMP2B: "MRB = "^a23_20rx^" * "^a19_16ry^" (USFR)" is a38_38=0 & a37_36=1 & a35_28=0x6f & a19_16ry & a23_20rx { MRB = ((zext(a23_20rx) * sext(a19_16ry)) << 1); }
 CMP2B: a27_24rn^" = "^a23_20rx^" * "^a19_16ry^" (SSI)" is a38_38=0 & a37_36=1 & a35_28=0x70 & a19_16ry & a23_20rx & a27_24rn { local p:8 = (sext(a23_20rx) * sext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
-CMP2B: a27_24rn^" = "^a23_20rx^" * "^a19_16ry^" (SS?)" is a38_38=0 & a37_36=1 & a35_28=0x71 & a19_16ry & a23_20rx & a27_24rn { local p:8 = (sext(a23_20rx) * sext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
 CMP2B: "MRF = "^a23_20rx^" * "^a19_16ry^" (SSI)" is a38_38=0 & a37_36=1 & a35_28=0x74 & a19_16ry & a23_20rx { MRF = (sext(a23_20rx) * sext(a19_16ry)); }
-CMP2B: "MRF = "^a23_20rx^" * "^a19_16ry^" (SS?)" is a38_38=0 & a37_36=1 & a35_28=0x75 & a19_16ry & a23_20rx { MRF = (sext(a23_20rx) * sext(a19_16ry)); }
 CMP2B: "MRB = "^a23_20rx^" * "^a19_16ry^" (SSI)" is a38_38=0 & a37_36=1 & a35_28=0x76 & a19_16ry & a23_20rx { MRB = (sext(a23_20rx) * sext(a19_16ry)); }
-CMP2B: "MRB = "^a23_20rx^" * "^a19_16ry^" (SS?)" is a38_38=0 & a37_36=1 & a35_28=0x77 & a19_16ry & a23_20rx { MRB = (sext(a23_20rx) * sext(a19_16ry)); }
 CMP2B: a27_24rn^" = "^a23_20rx^" * "^a19_16ry^" (SSF)" is a38_38=0 & a37_36=1 & a35_28=0x78 & a19_16ry & a23_20rx & a27_24rn { local p:8 = ((sext(a23_20rx) * sext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = "^a23_20rx^" * "^a19_16ry^" (SSFR)" is a38_38=0 & a37_36=1 & a35_28=0x79 & a19_16ry & a23_20rx & a27_24rn { local p:8 = ((sext(a23_20rx) * sext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
 CMP2B: "MRF = "^a23_20rx^" * "^a19_16ry^" (SSF)" is a38_38=0 & a37_36=1 & a35_28=0x7c & a19_16ry & a23_20rx { MRF = ((sext(a23_20rx) * sext(a19_16ry)) << 1); }
@@ -1726,13 +1543,9 @@ CMP2B: "MRF = "^a23_20rx^" * "^a19_16ry^" (SSFR)" is a38_38=0 & a37_36=1 & a35_2
 CMP2B: "MRB = "^a23_20rx^" * "^a19_16ry^" (SSF)" is a38_38=0 & a37_36=1 & a35_28=0x7e & a19_16ry & a23_20rx { MRB = ((sext(a23_20rx) * sext(a19_16ry)) << 1); }
 CMP2B: "MRB = "^a23_20rx^" * "^a19_16ry^" (SSFR)" is a38_38=0 & a37_36=1 & a35_28=0x7f & a19_16ry & a23_20rx { MRB = ((sext(a23_20rx) * sext(a19_16ry)) << 1); }
 CMP2B: a27_24rn^" = MRF + "^a23_20rx^" * "^a19_16ry^" (UUI)" is a38_38=0 & a37_36=1 & a35_28=0x80 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF + (zext(a23_20rx) * zext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
-CMP2B: a27_24rn^" = MRF + "^a23_20rx^" * "^a19_16ry^" (UU?)" is a38_38=0 & a37_36=1 & a35_28=0x81 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF + (zext(a23_20rx) * zext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = MRB + "^a23_20rx^" * "^a19_16ry^" (UUI)" is a38_38=0 & a37_36=1 & a35_28=0x82 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRB + (zext(a23_20rx) * zext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
-CMP2B: a27_24rn^" = MRB + "^a23_20rx^" * "^a19_16ry^" (UU?)" is a38_38=0 & a37_36=1 & a35_28=0x83 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRB + (zext(a23_20rx) * zext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
 CMP2B: "MRF = MRF + "^a23_20rx^" * "^a19_16ry^" (UUI)" is a38_38=0 & a37_36=1 & a35_28=0x84 & a19_16ry & a23_20rx { MRF = MRF + (zext(a23_20rx) * zext(a19_16ry)); }
-CMP2B: "MRF = MRF + "^a23_20rx^" * "^a19_16ry^" (UU?)" is a38_38=0 & a37_36=1 & a35_28=0x85 & a19_16ry & a23_20rx { MRF = MRF + (zext(a23_20rx) * zext(a19_16ry)); }
 CMP2B: "MRB = MRB + "^a23_20rx^" * "^a19_16ry^" (UUI)" is a38_38=0 & a37_36=1 & a35_28=0x86 & a19_16ry & a23_20rx { MRB = MRB + (zext(a23_20rx) * zext(a19_16ry)); }
-CMP2B: "MRB = MRB + "^a23_20rx^" * "^a19_16ry^" (UU?)" is a38_38=0 & a37_36=1 & a35_28=0x87 & a19_16ry & a23_20rx { MRB = MRB + (zext(a23_20rx) * zext(a19_16ry)); }
 CMP2B: a27_24rn^" = MRF + "^a23_20rx^" * "^a19_16ry^" (UUF)" is a38_38=0 & a37_36=1 & a35_28=0x88 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF + ((zext(a23_20rx) * zext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = MRF + "^a23_20rx^" * "^a19_16ry^" (UUFR)" is a38_38=0 & a37_36=1 & a35_28=0x89 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF + ((zext(a23_20rx) * zext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = MRB + "^a23_20rx^" * "^a19_16ry^" (UUF)" is a38_38=0 & a37_36=1 & a35_28=0x8a & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRB + ((zext(a23_20rx) * zext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
@@ -1742,13 +1555,9 @@ CMP2B: "MRF = MRF + "^a23_20rx^" * "^a19_16ry^" (UUFR)" is a38_38=0 & a37_36=1 &
 CMP2B: "MRB = MRB + "^a23_20rx^" * "^a19_16ry^" (UUF)" is a38_38=0 & a37_36=1 & a35_28=0x8e & a19_16ry & a23_20rx { MRB = MRB + ((zext(a23_20rx) * zext(a19_16ry)) << 1); }
 CMP2B: "MRB = MRB + "^a23_20rx^" * "^a19_16ry^" (UUFR)" is a38_38=0 & a37_36=1 & a35_28=0x8f & a19_16ry & a23_20rx { MRB = MRB + ((zext(a23_20rx) * zext(a19_16ry)) << 1); }
 CMP2B: a27_24rn^" = MRF + "^a23_20rx^" * "^a19_16ry^" (SUI)" is a38_38=0 & a37_36=1 & a35_28=0x90 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF + (sext(a23_20rx) * zext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
-CMP2B: a27_24rn^" = MRF + "^a23_20rx^" * "^a19_16ry^" (US?)" is a38_38=0 & a37_36=1 & a35_28=0x91 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF + (sext(a23_20rx) * zext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = MRB + "^a23_20rx^" * "^a19_16ry^" (SUI)" is a38_38=0 & a37_36=1 & a35_28=0x92 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRB + (sext(a23_20rx) * zext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
-CMP2B: a27_24rn^" = MRB + "^a23_20rx^" * "^a19_16ry^" (US?)" is a38_38=0 & a37_36=1 & a35_28=0x93 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRB + (sext(a23_20rx) * zext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
 CMP2B: "MRF = MRF + "^a23_20rx^" * "^a19_16ry^" (SUI)" is a38_38=0 & a37_36=1 & a35_28=0x94 & a19_16ry & a23_20rx { MRF = MRF + (sext(a23_20rx) * zext(a19_16ry)); }
-CMP2B: "MRF = MRF + "^a23_20rx^" * "^a19_16ry^" (US?)" is a38_38=0 & a37_36=1 & a35_28=0x95 & a19_16ry & a23_20rx { MRF = MRF + (sext(a23_20rx) * zext(a19_16ry)); }
 CMP2B: "MRB = MRB + "^a23_20rx^" * "^a19_16ry^" (SUI)" is a38_38=0 & a37_36=1 & a35_28=0x96 & a19_16ry & a23_20rx { MRB = MRB + (sext(a23_20rx) * zext(a19_16ry)); }
-CMP2B: "MRB = MRB + "^a23_20rx^" * "^a19_16ry^" (US?)" is a38_38=0 & a37_36=1 & a35_28=0x97 & a19_16ry & a23_20rx { MRB = MRB + (sext(a23_20rx) * zext(a19_16ry)); }
 CMP2B: a27_24rn^" = MRF + "^a23_20rx^" * "^a19_16ry^" (SUF)" is a38_38=0 & a37_36=1 & a35_28=0x98 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF + ((sext(a23_20rx) * zext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = MRF + "^a23_20rx^" * "^a19_16ry^" (SUFR)" is a38_38=0 & a37_36=1 & a35_28=0x99 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF + ((sext(a23_20rx) * zext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = MRB + "^a23_20rx^" * "^a19_16ry^" (SUF)" is a38_38=0 & a37_36=1 & a35_28=0x9a & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRB + ((sext(a23_20rx) * zext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
@@ -1758,13 +1567,9 @@ CMP2B: "MRF = MRF + "^a23_20rx^" * "^a19_16ry^" (SUFR)" is a38_38=0 & a37_36=1 &
 CMP2B: "MRB = MRB + "^a23_20rx^" * "^a19_16ry^" (SUF)" is a38_38=0 & a37_36=1 & a35_28=0x9e & a19_16ry & a23_20rx { MRB = MRB + ((sext(a23_20rx) * zext(a19_16ry)) << 1); }
 CMP2B: "MRB = MRB + "^a23_20rx^" * "^a19_16ry^" (SUFR)" is a38_38=0 & a37_36=1 & a35_28=0x9f & a19_16ry & a23_20rx { MRB = MRB + ((sext(a23_20rx) * zext(a19_16ry)) << 1); }
 CMP2B: a27_24rn^" = MRF + "^a23_20rx^" * "^a19_16ry^" (USI)" is a38_38=0 & a37_36=1 & a35_28=0xa0 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF + (zext(a23_20rx) * sext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
-CMP2B: a27_24rn^" = MRF + "^a23_20rx^" * "^a19_16ry^" (SU?)" is a38_38=0 & a37_36=1 & a35_28=0xa1 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF + (zext(a23_20rx) * sext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = MRB + "^a23_20rx^" * "^a19_16ry^" (USI)" is a38_38=0 & a37_36=1 & a35_28=0xa2 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRB + (zext(a23_20rx) * sext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
-CMP2B: a27_24rn^" = MRB + "^a23_20rx^" * "^a19_16ry^" (SU?)" is a38_38=0 & a37_36=1 & a35_28=0xa3 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRB + (zext(a23_20rx) * sext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
 CMP2B: "MRF = MRF + "^a23_20rx^" * "^a19_16ry^" (USI)" is a38_38=0 & a37_36=1 & a35_28=0xa4 & a19_16ry & a23_20rx { MRF = MRF + (zext(a23_20rx) * sext(a19_16ry)); }
-CMP2B: "MRF = MRF + "^a23_20rx^" * "^a19_16ry^" (SU?)" is a38_38=0 & a37_36=1 & a35_28=0xa5 & a19_16ry & a23_20rx { MRF = MRF + (zext(a23_20rx) * sext(a19_16ry)); }
 CMP2B: "MRB = MRB + "^a23_20rx^" * "^a19_16ry^" (USI)" is a38_38=0 & a37_36=1 & a35_28=0xa6 & a19_16ry & a23_20rx { MRB = MRB + (zext(a23_20rx) * sext(a19_16ry)); }
-CMP2B: "MRB = MRB + "^a23_20rx^" * "^a19_16ry^" (SU?)" is a38_38=0 & a37_36=1 & a35_28=0xa7 & a19_16ry & a23_20rx { MRB = MRB + (zext(a23_20rx) * sext(a19_16ry)); }
 CMP2B: a27_24rn^" = MRF + "^a23_20rx^" * "^a19_16ry^" (USF)" is a38_38=0 & a37_36=1 & a35_28=0xa8 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF + ((zext(a23_20rx) * sext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = MRF + "^a23_20rx^" * "^a19_16ry^" (USFR)" is a38_38=0 & a37_36=1 & a35_28=0xa9 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF + ((zext(a23_20rx) * sext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = MRB + "^a23_20rx^" * "^a19_16ry^" (USF)" is a38_38=0 & a37_36=1 & a35_28=0xaa & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRB + ((zext(a23_20rx) * sext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
@@ -1774,13 +1579,9 @@ CMP2B: "MRF = MRF + "^a23_20rx^" * "^a19_16ry^" (USFR)" is a38_38=0 & a37_36=1 &
 CMP2B: "MRB = MRB + "^a23_20rx^" * "^a19_16ry^" (USF)" is a38_38=0 & a37_36=1 & a35_28=0xae & a19_16ry & a23_20rx { MRB = MRB + ((zext(a23_20rx) * sext(a19_16ry)) << 1); }
 CMP2B: "MRB = MRB + "^a23_20rx^" * "^a19_16ry^" (USFR)" is a38_38=0 & a37_36=1 & a35_28=0xaf & a19_16ry & a23_20rx { MRB = MRB + ((zext(a23_20rx) * sext(a19_16ry)) << 1); }
 CMP2B: a27_24rn^" = MRF + "^a23_20rx^" * "^a19_16ry^" (SSI)" is a38_38=0 & a37_36=1 & a35_28=0xb0 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF + (sext(a23_20rx) * sext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
-CMP2B: a27_24rn^" = MRF + "^a23_20rx^" * "^a19_16ry^" (SS?)" is a38_38=0 & a37_36=1 & a35_28=0xb1 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF + (sext(a23_20rx) * sext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = MRB + "^a23_20rx^" * "^a19_16ry^" (SSI)" is a38_38=0 & a37_36=1 & a35_28=0xb2 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRB + (sext(a23_20rx) * sext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
-CMP2B: a27_24rn^" = MRB + "^a23_20rx^" * "^a19_16ry^" (SS?)" is a38_38=0 & a37_36=1 & a35_28=0xb3 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRB + (sext(a23_20rx) * sext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
 CMP2B: "MRF = MRF + "^a23_20rx^" * "^a19_16ry^" (SSI)" is a38_38=0 & a37_36=1 & a35_28=0xb4 & a19_16ry & a23_20rx { MRF = MRF + (sext(a23_20rx) * sext(a19_16ry)); }
-CMP2B: "MRF = MRF + "^a23_20rx^" * "^a19_16ry^" (SS?)" is a38_38=0 & a37_36=1 & a35_28=0xb5 & a19_16ry & a23_20rx { MRF = MRF + (sext(a23_20rx) * sext(a19_16ry)); }
 CMP2B: "MRB = MRB + "^a23_20rx^" * "^a19_16ry^" (SSI)" is a38_38=0 & a37_36=1 & a35_28=0xb6 & a19_16ry & a23_20rx { MRB = MRB + (sext(a23_20rx) * sext(a19_16ry)); }
-CMP2B: "MRB = MRB + "^a23_20rx^" * "^a19_16ry^" (SS?)" is a38_38=0 & a37_36=1 & a35_28=0xb7 & a19_16ry & a23_20rx { MRB = MRB + (sext(a23_20rx) * sext(a19_16ry)); }
 CMP2B: a27_24rn^" = MRF + "^a23_20rx^" * "^a19_16ry^" (SSF)" is a38_38=0 & a37_36=1 & a35_28=0xb8 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF + ((sext(a23_20rx) * sext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = MRF + "^a23_20rx^" * "^a19_16ry^" (SSFR)" is a38_38=0 & a37_36=1 & a35_28=0xb9 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF + ((sext(a23_20rx) * sext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = MRB + "^a23_20rx^" * "^a19_16ry^" (SSF)" is a38_38=0 & a37_36=1 & a35_28=0xba & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRB + ((sext(a23_20rx) * sext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
@@ -1790,13 +1591,9 @@ CMP2B: "MRF = MRF + "^a23_20rx^" * "^a19_16ry^" (SSFR)" is a38_38=0 & a37_36=1 &
 CMP2B: "MRB = MRB + "^a23_20rx^" * "^a19_16ry^" (SSF)" is a38_38=0 & a37_36=1 & a35_28=0xbe & a19_16ry & a23_20rx { MRB = MRB + ((sext(a23_20rx) * sext(a19_16ry)) << 1); }
 CMP2B: "MRB = MRB + "^a23_20rx^" * "^a19_16ry^" (SSFR)" is a38_38=0 & a37_36=1 & a35_28=0xbf & a19_16ry & a23_20rx { MRB = MRB + ((sext(a23_20rx) * sext(a19_16ry)) << 1); }
 CMP2B: a27_24rn^" = MRF - "^a23_20rx^" * "^a19_16ry^" (UUI)" is a38_38=0 & a37_36=1 & a35_28=0xc0 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF - (zext(a23_20rx) * zext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
-CMP2B: a27_24rn^" = MRF - "^a23_20rx^" * "^a19_16ry^" (UU?)" is a38_38=0 & a37_36=1 & a35_28=0xc1 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF - (zext(a23_20rx) * zext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = MRB - "^a23_20rx^" * "^a19_16ry^" (UUI)" is a38_38=0 & a37_36=1 & a35_28=0xc2 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRB - (zext(a23_20rx) * zext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
-CMP2B: a27_24rn^" = MRB - "^a23_20rx^" * "^a19_16ry^" (UU?)" is a38_38=0 & a37_36=1 & a35_28=0xc3 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRB - (zext(a23_20rx) * zext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
 CMP2B: "MRF = MRF - "^a23_20rx^" * "^a19_16ry^" (UUI)" is a38_38=0 & a37_36=1 & a35_28=0xc4 & a19_16ry & a23_20rx { MRF = MRF - (zext(a23_20rx) * zext(a19_16ry)); }
-CMP2B: "MRF = MRF - "^a23_20rx^" * "^a19_16ry^" (UU?)" is a38_38=0 & a37_36=1 & a35_28=0xc5 & a19_16ry & a23_20rx { MRF = MRF - (zext(a23_20rx) * zext(a19_16ry)); }
 CMP2B: "MRB = MRB - "^a23_20rx^" * "^a19_16ry^" (UUI)" is a38_38=0 & a37_36=1 & a35_28=0xc6 & a19_16ry & a23_20rx { MRB = MRB - (zext(a23_20rx) * zext(a19_16ry)); }
-CMP2B: "MRB = MRB - "^a23_20rx^" * "^a19_16ry^" (UU?)" is a38_38=0 & a37_36=1 & a35_28=0xc7 & a19_16ry & a23_20rx { MRB = MRB - (zext(a23_20rx) * zext(a19_16ry)); }
 CMP2B: a27_24rn^" = MRF - "^a23_20rx^" * "^a19_16ry^" (UUF)" is a38_38=0 & a37_36=1 & a35_28=0xc8 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF - ((zext(a23_20rx) * zext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = MRF - "^a23_20rx^" * "^a19_16ry^" (UUFR)" is a38_38=0 & a37_36=1 & a35_28=0xc9 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF - ((zext(a23_20rx) * zext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = MRB - "^a23_20rx^" * "^a19_16ry^" (UUF)" is a38_38=0 & a37_36=1 & a35_28=0xca & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRB - ((zext(a23_20rx) * zext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
@@ -1806,13 +1603,9 @@ CMP2B: "MRF = MRF - "^a23_20rx^" * "^a19_16ry^" (UUFR)" is a38_38=0 & a37_36=1 &
 CMP2B: "MRB = MRB - "^a23_20rx^" * "^a19_16ry^" (UUF)" is a38_38=0 & a37_36=1 & a35_28=0xce & a19_16ry & a23_20rx { MRB = MRB - ((zext(a23_20rx) * zext(a19_16ry)) << 1); }
 CMP2B: "MRB = MRB - "^a23_20rx^" * "^a19_16ry^" (UUFR)" is a38_38=0 & a37_36=1 & a35_28=0xcf & a19_16ry & a23_20rx { MRB = MRB - ((zext(a23_20rx) * zext(a19_16ry)) << 1); }
 CMP2B: a27_24rn^" = MRF - "^a23_20rx^" * "^a19_16ry^" (SUI)" is a38_38=0 & a37_36=1 & a35_28=0xd0 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF - (sext(a23_20rx) * zext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
-CMP2B: a27_24rn^" = MRF - "^a23_20rx^" * "^a19_16ry^" (US?)" is a38_38=0 & a37_36=1 & a35_28=0xd1 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF - (sext(a23_20rx) * zext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = MRB - "^a23_20rx^" * "^a19_16ry^" (SUI)" is a38_38=0 & a37_36=1 & a35_28=0xd2 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRB - (sext(a23_20rx) * zext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
-CMP2B: a27_24rn^" = MRB - "^a23_20rx^" * "^a19_16ry^" (US?)" is a38_38=0 & a37_36=1 & a35_28=0xd3 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRB - (sext(a23_20rx) * zext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
 CMP2B: "MRF = MRF - "^a23_20rx^" * "^a19_16ry^" (SUI)" is a38_38=0 & a37_36=1 & a35_28=0xd4 & a19_16ry & a23_20rx { MRF = MRF - (sext(a23_20rx) * zext(a19_16ry)); }
-CMP2B: "MRF = MRF - "^a23_20rx^" * "^a19_16ry^" (US?)" is a38_38=0 & a37_36=1 & a35_28=0xd5 & a19_16ry & a23_20rx { MRF = MRF - (sext(a23_20rx) * zext(a19_16ry)); }
 CMP2B: "MRB = MRB - "^a23_20rx^" * "^a19_16ry^" (SUI)" is a38_38=0 & a37_36=1 & a35_28=0xd6 & a19_16ry & a23_20rx { MRB = MRB - (sext(a23_20rx) * zext(a19_16ry)); }
-CMP2B: "MRB = MRB - "^a23_20rx^" * "^a19_16ry^" (US?)" is a38_38=0 & a37_36=1 & a35_28=0xd7 & a19_16ry & a23_20rx { MRB = MRB - (sext(a23_20rx) * zext(a19_16ry)); }
 CMP2B: a27_24rn^" = MRF - "^a23_20rx^" * "^a19_16ry^" (SUF)" is a38_38=0 & a37_36=1 & a35_28=0xd8 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF - ((sext(a23_20rx) * zext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = MRF - "^a23_20rx^" * "^a19_16ry^" (SUFR)" is a38_38=0 & a37_36=1 & a35_28=0xd9 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF - ((sext(a23_20rx) * zext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = MRB - "^a23_20rx^" * "^a19_16ry^" (SUF)" is a38_38=0 & a37_36=1 & a35_28=0xda & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRB - ((sext(a23_20rx) * zext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
@@ -1822,13 +1615,9 @@ CMP2B: "MRF = MRF - "^a23_20rx^" * "^a19_16ry^" (SUFR)" is a38_38=0 & a37_36=1 &
 CMP2B: "MRB = MRB - "^a23_20rx^" * "^a19_16ry^" (SUF)" is a38_38=0 & a37_36=1 & a35_28=0xde & a19_16ry & a23_20rx { MRB = MRB - ((sext(a23_20rx) * zext(a19_16ry)) << 1); }
 CMP2B: "MRB = MRB - "^a23_20rx^" * "^a19_16ry^" (SUFR)" is a38_38=0 & a37_36=1 & a35_28=0xdf & a19_16ry & a23_20rx { MRB = MRB - ((sext(a23_20rx) * zext(a19_16ry)) << 1); }
 CMP2B: a27_24rn^" = MRF - "^a23_20rx^" * "^a19_16ry^" (USI)" is a38_38=0 & a37_36=1 & a35_28=0xe0 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF - (zext(a23_20rx) * sext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
-CMP2B: a27_24rn^" = MRF - "^a23_20rx^" * "^a19_16ry^" (SU?)" is a38_38=0 & a37_36=1 & a35_28=0xe1 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF - (zext(a23_20rx) * sext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = MRB - "^a23_20rx^" * "^a19_16ry^" (USI)" is a38_38=0 & a37_36=1 & a35_28=0xe2 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRB - (zext(a23_20rx) * sext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
-CMP2B: a27_24rn^" = MRB - "^a23_20rx^" * "^a19_16ry^" (SU?)" is a38_38=0 & a37_36=1 & a35_28=0xe3 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRB - (zext(a23_20rx) * sext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
 CMP2B: "MRF = MRF - "^a23_20rx^" * "^a19_16ry^" (USI)" is a38_38=0 & a37_36=1 & a35_28=0xe4 & a19_16ry & a23_20rx { MRF = MRF - (zext(a23_20rx) * sext(a19_16ry)); }
-CMP2B: "MRF = MRF - "^a23_20rx^" * "^a19_16ry^" (SU?)" is a38_38=0 & a37_36=1 & a35_28=0xe5 & a19_16ry & a23_20rx { MRF = MRF - (zext(a23_20rx) * sext(a19_16ry)); }
 CMP2B: "MRB = MRB - "^a23_20rx^" * "^a19_16ry^" (USI)" is a38_38=0 & a37_36=1 & a35_28=0xe6 & a19_16ry & a23_20rx { MRB = MRB - (zext(a23_20rx) * sext(a19_16ry)); }
-CMP2B: "MRB = MRB - "^a23_20rx^" * "^a19_16ry^" (SU?)" is a38_38=0 & a37_36=1 & a35_28=0xe7 & a19_16ry & a23_20rx { MRB = MRB - (zext(a23_20rx) * sext(a19_16ry)); }
 CMP2B: a27_24rn^" = MRF - "^a23_20rx^" * "^a19_16ry^" (USF)" is a38_38=0 & a37_36=1 & a35_28=0xe8 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF - ((zext(a23_20rx) * sext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = MRF - "^a23_20rx^" * "^a19_16ry^" (USFR)" is a38_38=0 & a37_36=1 & a35_28=0xe9 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF - ((zext(a23_20rx) * sext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = MRB - "^a23_20rx^" * "^a19_16ry^" (USF)" is a38_38=0 & a37_36=1 & a35_28=0xea & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRB - ((zext(a23_20rx) * sext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
@@ -1838,13 +1627,9 @@ CMP2B: "MRF = MRF - "^a23_20rx^" * "^a19_16ry^" (USFR)" is a38_38=0 & a37_36=1 &
 CMP2B: "MRB = MRB - "^a23_20rx^" * "^a19_16ry^" (USF)" is a38_38=0 & a37_36=1 & a35_28=0xee & a19_16ry & a23_20rx { MRB = MRB - ((zext(a23_20rx) * sext(a19_16ry)) << 1); }
 CMP2B: "MRB = MRB - "^a23_20rx^" * "^a19_16ry^" (USFR)" is a38_38=0 & a37_36=1 & a35_28=0xef & a19_16ry & a23_20rx { MRB = MRB - ((zext(a23_20rx) * sext(a19_16ry)) << 1); }
 CMP2B: a27_24rn^" = MRF - "^a23_20rx^" * "^a19_16ry^" (SSI)" is a38_38=0 & a37_36=1 & a35_28=0xf0 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF - (sext(a23_20rx) * sext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
-CMP2B: a27_24rn^" = MRF - "^a23_20rx^" * "^a19_16ry^" (SS?)" is a38_38=0 & a37_36=1 & a35_28=0xf1 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF - (sext(a23_20rx) * sext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = MRB - "^a23_20rx^" * "^a19_16ry^" (SSI)" is a38_38=0 & a37_36=1 & a35_28=0xf2 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRB - (sext(a23_20rx) * sext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
-CMP2B: a27_24rn^" = MRB - "^a23_20rx^" * "^a19_16ry^" (SS?)" is a38_38=0 & a37_36=1 & a35_28=0xf3 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRB - (sext(a23_20rx) * sext(a19_16ry)); a27_24rn = p(0); setmul(a27_24rn); }
 CMP2B: "MRF = MRF - "^a23_20rx^" * "^a19_16ry^" (SSI)" is a38_38=0 & a37_36=1 & a35_28=0xf4 & a19_16ry & a23_20rx { MRF = MRF - (sext(a23_20rx) * sext(a19_16ry)); }
-CMP2B: "MRF = MRF - "^a23_20rx^" * "^a19_16ry^" (SS?)" is a38_38=0 & a37_36=1 & a35_28=0xf5 & a19_16ry & a23_20rx { MRF = MRF - (sext(a23_20rx) * sext(a19_16ry)); }
 CMP2B: "MRB = MRB - "^a23_20rx^" * "^a19_16ry^" (SSI)" is a38_38=0 & a37_36=1 & a35_28=0xf6 & a19_16ry & a23_20rx { MRB = MRB - (sext(a23_20rx) * sext(a19_16ry)); }
-CMP2B: "MRB = MRB - "^a23_20rx^" * "^a19_16ry^" (SS?)" is a38_38=0 & a37_36=1 & a35_28=0xf7 & a19_16ry & a23_20rx { MRB = MRB - (sext(a23_20rx) * sext(a19_16ry)); }
 CMP2B: a27_24rn^" = MRF - "^a23_20rx^" * "^a19_16ry^" (SSF)" is a38_38=0 & a37_36=1 & a35_28=0xf8 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF - ((sext(a23_20rx) * sext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = MRF - "^a23_20rx^" * "^a19_16ry^" (SSFR)" is a38_38=0 & a37_36=1 & a35_28=0xf9 & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRF - ((sext(a23_20rx) * sext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
 CMP2B: a27_24rn^" = MRB - "^a23_20rx^" * "^a19_16ry^" (SSF)" is a38_38=0 & a37_36=1 & a35_28=0xfa & a19_16ry & a23_20rx & a27_24rn { local p:8 = MRB - ((sext(a23_20rx) * sext(a19_16ry)) << 1); a27_24rn = p(4); setmul(a27_24rn); }
