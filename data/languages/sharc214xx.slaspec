@@ -21,6 +21,15 @@
 # is 12 bytes; in VISA code the delay-slot byte count depends on the first slot's length,
 # which the context field `dslot` records (see DS below and the SHARC Delay Slot analyzer).
 #
+# SIMD.  MODE1 PEYEN is a run-time mode; like bit-reverse addressing (brm0/brm8) it is a
+# context bit, simd, set by the user (or an analyzer) over code that runs with PEYEN on.  With
+# simd = 1 every instruction also performs its implicit PEy half (PGR "SIMD Mode" and the
+# "SIMD Explicit/Implicit Operation" of each ch. 9 type): computes on Sn, MSF/MSB and the
+# ASTATy/STKYy flags, conditions tested per PE (computes and data moves) or on both PEs
+# (branches, DO UNTIL), data moves of the complementary registers at address + 1 (normal word)
+# or + 2 (short word).  The simd = 1 constructors are separate (generated last), so simd = 0
+# decodes to exactly the SISD constructors.  The display is the explicit instruction.
+#
 # The instruction tables are generated: see tools/gen_sinc.py.
 
 define endian=big;
@@ -67,6 +76,18 @@ define register offset=0x380 size=4 [ SSM0 SSM1 SSM2 SSM3 SSM4 SSM5 SSM6 SSM7 SS
 define register offset=0x3C0 size=4 [ SSX0 SSX1 SSX2 SSX3 SSX4 SSX5 SSX6 SSX7 SSX8 SSX9 SSX10 SSX11 SSX12 SSX13 SSX14 ];
 define register offset=0x400 size=4 [ SSY0 SSY1 SSY2 SSY3 SSY4 SSY5 SSY6 SSY7 SSY8 SSY9 SSY10 SSY11 SSY12 SSY13 SSY14 ];
 define register offset=0x440 size=4 [ SSP ];
+# SIMD (PEy, MODE1 PEYEN): the PEy multiplier result registers MSF/MSB (PGR "PEy Multiplier
+# Results Registers", the same 80-bit layout as MRF/MRB), PEy's bit FIFO, write pointer and SF
+# flag (each processing element has its own shifter, PGR "SIMD Mode"; SF is ASTATy bit 14), and
+# NOCOMP, the sink for the implicit transfer of a universal register that has no complement
+# (PGR Table 10-3; written, never read).
+define register offset=0x480 size=8 [ MSF MSB ];
+define register offset=0x480 size=4 [ MS1F MS0F MS1B MS0B ];
+define register offset=0x490 size=2 [ MS2F MS2B ];
+define register offset=0x498 size=8 [ BFFY ];
+define register offset=0x4A0 size=4 [ BFFWRPY ];
+define register offset=0x4A4 size=1 [ SFY ];
+define register offset=0x4A8 size=4 [ NOCOMP ];
 
 # Arithmetic status (ASTATx, PGR Table A-6), sticky status (STKYx, Table A-7), MODE1
 # (Table A-1) and FLAGS (Table A-5) bits.  The flags are bit ranges of their registers, so
@@ -79,6 +100,14 @@ define bitrange AZ=ASTATX[0,1] AV=ASTATX[1,1] AN=ASTATX[2,1] AC=ASTATX[3,1] AS=A
                 MVS=STKYX[7,1] MUS=STKYX[8,1] MIS=STKYX[9,1] CB7S=STKYX[17,1] CB15S=STKYX[18,1]
                 BR8=MODE1[0,1] BR0=MODE1[1,1] ALUSAT=MODE1[13,1] TRUNC=MODE1[15,1] CBUFEN=MODE1[24,1]
                 FLAG0=FLAGS[0,1] FLAG1=FLAGS[2,1] FLAG2=FLAGS[4,1] FLAG3=FLAGS[6,1];
+# The PEy flags in ASTATy/STKYy (same layout, PGR Tables A-6/A-7; the stack and circular
+# buffer sticky bits exist in STKYx only, PGR "Conditional Instruction Execution in SIMD Mode").
+define bitrange AZY=ASTATY[0,1] AVY=ASTATY[1,1] ANY=ASTATY[2,1] ACY=ASTATY[3,1] ASY=ASTATY[4,1]
+                AIY=ASTATY[5,1] MNY=ASTATY[6,1] MVY=ASTATY[7,1] MUY=ASTATY[8,1] MIY=ASTATY[9,1]
+                AFY=ASTATY[10,1] SVY=ASTATY[11,1] SZY=ASTATY[12,1] SSY=ASTATY[13,1]
+                BTFY=ASTATY[18,1] CACCY=ASTATY[24,8]
+                AUSY=STKYY[0,1] AVSY=STKYY[1,1] AOSY=STKYY[2,1] AISY=STKYY[5,1] MOSY=STKYY[6,1]
+                MVSY=STKYY[7,1] MUSY=STKYY[8,1] MISY=STKYY[9,1];
 
 define register offset=0x500 size=8 contextreg;
 define context contextreg
@@ -89,6 +118,7 @@ define context contextreg
   brm0  = (6,6)   noflow   # bit-reverse mode of DAG1 (MODE1 BR0) assumed on: I0 post-modify output reversed
   brm8  = (7,7)   noflow   # bit-reverse mode of DAG2 (MODE1 BR8) assumed on: I8 post-modify output reversed
   lterm = (8,12)  noflow   # the loop's termination code (15 = LCE, 31 = FOREVER)
+  simd  = (13,13) noflow   # SIMD mode (MODE1 PEYEN) assumed on: PEy executes the implicit half
   ltop  = (32,55) noflow   # the loop's first instruction
 ;
 
@@ -244,6 +274,77 @@ macro bitrev32(v) {
 	v = ((v >> 4) & 0x0f0f0f0f) | ((v & 0x0f0f0f0f) << 4);
 	v = ((v >> 8) & 0x00ff00ff) | ((v & 0x00ff00ff) << 8);
 	v = (v >> 16) | (v << 16);
+}
+
+# ---------------------------------------------------------------- SIMD (PEy)
+# The flag-setting macros above for PEy, writing the ASTATy/STKYy flags (the generator's
+# PEy compute bodies are the PEx bodies with every flag, macro and register renamed).
+macro fixresY(r) { AZY = (r == 0); ANY = (r s< 0); AFY = 0; ASY = 0; AIY = 0; }
+macro fixlogicY(r) { fixresY(r); AVY = 0; ACY = 0; }
+macro aluaddY(d, x, y, c) {
+	local s:4 = x + y + c;
+	ACY = carry(x, y) || carry(x + y, c);
+	AVY = (((x ^ s) & (y ^ s)) s< 0);
+	local satv:4 = 0x7fffffff + zext(s s>= 0);
+	s = s + zext(AVY && ALUSAT) * (satv - s);
+	d = s; fixresY(s); AOSY = AOSY || AVY;
+}
+macro compflagsY(gt) { AVY = 0; ACY = 0; ASY = 0; AFY = 0; CACCY = (CACCY >> 1) | (zext(gt) << 7); }
+macro fltresY(r) {
+	AZY = ((r & 0x7f800000) == 0); ANY = (r s< 0); AFY = 1; ACY = 0; ASY = 0;
+	AUSY = AUSY || (((r & 0x7f800000) == 0) && ((r & 0x7fffff) != 0));
+	ftz(r);
+}
+macro fltovY(r) { AVY = ((r & 0x7fffffff) == 0x7f800000); AVSY = AVSY || AVY; }
+macro fltinvY(i) { AIY = i; AISY = AISY || i; }
+macro fixconvY(d, v, tz) {
+	local fl:4 = floor(v);
+	local fr:4 = v f- fl;
+	local fli:4 = trunc(fl);
+	local up:4 = zext((fr f> 0x3f000000:4) || ((fr f== 0x3f000000:4) && ((fli & 1) == 1)));
+	local near:4 = fli + up;
+	local r:4 = trunc(v);
+	r = r + zext(tz == 0) * (zext(TRUNC) * fli + zext(TRUNC == 0) * near - r);
+	local big:1 = (v f>= 0x4f000000:4) || (v f< 0xcf000000:4);
+	local sat:4 = 0x7fffffff + zext(v f< 0:4);
+	local ovr:4 = sat + zext(ALUSAT == 0) * (0xffffffff - sat);
+	r = r + zext(big) * (ovr - r);
+	r = r | (zext(nan(v)) * 0xffffffff);
+	AVY = big; AVSY = AVSY || AVY;
+	fltinvY(nan(v) || (big && ALUSAT == 0));
+	d = r; AZY = (r == 0); ANY = (r s< 0); AFY = 1; ACY = 0; ASY = 0;
+}
+macro fpackY(d, x) {
+	local sgn:4 = (x >> 16) & 0x8000;
+	local e:4 = (x >> 23) & 0xff;
+	local f:4 = x & 0x7fffff;
+	local nv:4 = ((((e >> 4) & 8) | (e & 7)) << 11) | (f >> 12);
+	local rb:4 = (f >> 11) & 1;
+	local st:4 = zext((f & 0x7ff) != 0);
+	nv = nv + (rb & (st | (nv & 1)));
+	local ov:1 = (nv > 0x7fff);
+	nv = nv - zext(ov) * (nv - 0x7fff);
+	local m:4 = f | 0x800000;
+	local sh:4 = 134 - e;
+	local dv:4 = m >> sh;
+	local drb:4 = (m >> (sh - 1)) & 1;
+	local dst:4 = zext((m & ((1 << (sh - 1)) - 1)) != 0);
+	dv = dv + (drb & (dst | (dv & 1)));
+	local big:1 = (e > 135);
+	local norm:1 = (e > 120) && (e <= 135);
+	local den:1 = (e > 109) && (e <= 120);
+	local r:4 = sgn | (zext(big) * 0x7fff + zext(norm) * nv + zext(den) * dv);
+	r = r * zext(e > 109);
+	d = r; SVY = big || (norm && ov); SZY = 0; SSY = 0;
+}
+# The implicit (PEy) address of a SIMD access (PGR Table 6-4, the "+k" of the ch. 9 type
+# descriptions): the explicit address + 1 in normal-word space, + 2 in short-word space
+# (0x100000-0x1fffff, the internal SW range of this memory map).  SIMD transfers exist in
+# normal-word and short-word space only (PGR "DAG Transfers in SIMD Mode"): ok is clear
+# for the IOP registers (below 0x40000) and the long-word range (0x40000-0x7ffff).
+macro simdea(ey, ok, ea) {
+	ey = ea + 1 + zext((ea >> 20) == 1);
+	ok = (ea >= 0x80000);
 }
 
 # A computed code address.  In ISA code a code pointer is a 48-bit address; like the direct
