@@ -14,10 +14,17 @@ if (!ghidraInstallDir) {
 
 apply from: new File(ghidraInstallDir).getCanonicalPath() + "/support/buildExtension.gradle"
 
+// The module has no third-party dependencies.  buildExtension.gradle's copyDependencies would
+// otherwise copy every jar it finds under Ghidra/Processors into lib/, including other
+// modules' jars when those are symlinked in from outside the Ghidra install (and it fails
+// when this module itself is symlinked there for the test suite).
+copyDependencies.enabled = false
+
 // Development material that has no use inside Ghidra.
 tasks.named("buildExtension") {
 	exclude ".github/**"
 	exclude "scratch/**"
+	exclude "test/**"
 	exclude "tests/**"
 	exclude "tools/**"
 	exclude "data/languages/*.sinc.in"
