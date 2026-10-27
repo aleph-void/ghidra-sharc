@@ -24,6 +24,8 @@ UREG.update({f"L{i}": 0x30 + i for i in range(16)})
 UREG.update({f"B{i}": 0x40 + i for i in range(16)})
 UREG.update({"PCSTK": 0x64, "PCSTKP": 0x65, "LCNTR": 0x68, "CURLCNTR": 0x67, "MODE1": 0x72,
              "ASTATX": 0x76, "STKYX": 0x78})
+UREG.update({f"S{i}": 0x50 + i for i in range(16)})
+UREG.update({"PX": 0x6B, "PX1": 0x6C, "PX2": 0x6D, "USTAT1": 0x70, "USTAT2": 0x71, "ASTATY": 0x77, "STKYY": 0x79})
 
 
 def alu(op, n, x, y=0):
@@ -53,10 +55,26 @@ def ureg_imm(r, v):
     return (0x0F << 40) | (UREG[r] << 32) | (v & 0xFFFFFFFF)
 
 
-def dag(r, i, m, d, u=1, g=0, lw=0, c=0):
+def dag(r, i, m, d, u=1, g=0, lw=0, c=0, cond=TRUE):
     """Type 3a: ureg <-> DM/PM(Ia, Mb); u = 1 post-modify (Ia, Mb), d = 1 write to memory."""
-    return ((0b010 << 45) | (u << 44) | ((i & 7) << 41) | ((m & 7) << 38) | (TRUE << 33) | (g << 32) |
+    return ((0b010 << 45) | (u << 44) | ((i & 7) << 41) | ((m & 7) << 38) | (cond << 33) | (g << 32) |
             (d << 31) | (lw << 30) | (UREG[r] << 23) | c)
+
+
+def umov(dst, src, cond=TRUE, c=0):
+    """Type 5a: [IF cond] [compute,] ureg = ureg (PGR 10-9: 01110 SRC(4..2) COND SRC(1..0) DEST)."""
+    s = UREG[src]
+    return (0xE << 43) | ((s >> 2) << 38) | (cond << 33) | ((s & 3) << 31) | (UREG[dst] << 23) | c
+
+
+def swap(rn, sn, cond=TRUE, c=0):
+    """Type 5b: [IF cond] [compute,] Rn <-> Sn (01111 CDREG(41..38) COND ... DREG(26..23))."""
+    return (0xF << 43) | (sn << 38) | (cond << 33) | (rn << 23) | c
+
+
+def jrel6(off, cond=TRUE, c=0, e=0):
+    """Type 9a: IF cond JUMP (PC, off) [, [ELSE] compute] (0001 00 1 0 0 COND RELADDR6 J E CI)."""
+    return (0x04 << 41) | (1 << 40) | (cond << 33) | ((off & 0x3F) << 27) | (e << 25) | c
 
 
 def absmem(r, addr, d, lw=0):
@@ -103,9 +121,9 @@ def shimm(op8, n, x, data8=0, bit6=None, len6=None):
     return (0x02 << 40) | (TRUE << 33) | (dataex << 27) | ((op8 >> 2) << 16) | ((data8 & 0xFF) << 8) | (n << 4) | x
 
 
-def modify(i, m):
+def modify(i, m, cond=TRUE):
     """Type 7a: MODIFY(Ia, Mb) (Id = Is)."""
-    return (0x04 << 40) | ((i >> 3) << 38) | (TRUE << 33) | ((i & 7) << 30) | ((m & 7) << 27)
+    return (0x04 << 40) | ((i >> 3) << 38) | (cond << 33) | ((i & 7) << 30) | ((m & 7) << 27)
 
 
 def f32(x):
@@ -222,6 +240,70 @@ t("push_pop_sts", [ureg_imm("R0", 0), comp(alu(0x21, 0, 0)), stack(0x10), ureg_i
 t("XFAIL_wrong_add", [ureg_imm("R0", 5), ureg_imm("R1", 7), comp(alu(0x01, 2, 0, 1))], "", "R2=d")
 
 
+# ---------------------------------------------------------------- SIMD programs (context simd = 1)
+# PGR "SIMD Mode" (3-40), "Conditional Instruction Execution in SIMD Mode" (4-94, Tables 4-39..4-50)
+# and the "SIMD Mode" paragraphs of ch. 9.  In SIMD an immediate load of a data register also
+# loads its complement, so PEx/PEy data start out different through the init items.
+ST = []
+
+
+def st(name, words, init, expect):
+    ST.append((name, words, init, expect))
+
+
+EQ, NE = 0, 16
+st("simd_alu_flags", [comp(alu(0x02, 2, 0, 1))], "R0=5,R1=5,S0=1,S1=2",
+   "R2=0,S2=ffffffff,ASTATX=9,ASTATY=4")
+#   R2 = R0 - R1 = 5 + ~5 + 1 = 0 with carry: ASTATx = AZ (1) + AC (8);
+#   S2 = S0 - S1 = 1 + ~2 + 1 = 0xffffffff, no carry: ASTATy = AN (4)
+st("simd_mac_msf", [comp(mul(0xBC, 0, 0, 1)), comp(mrmove(1, 2, 0))],
+   "R0=40000000,R1=40000000,S0=20000000,S1=40000000",
+   "MRF=2000000000000000,MSF=1000000000000000,R2=20000000,S2=10000000,MS2F=0")
+#   MRF = MRF + R0 * R1 (SSF): 0.5 * 0.5 = 0.25 -> 2^60 << 1 = 0x2000000000000000;
+#   MSF = MSF + S0 * S1: 0.25 * 0.5 = 0.125 -> 0x1000000000000000; R2 = MR1F, S2 = MS1F
+st("simd_cond_compute", [comp(alu(0x29, 3, 3), cond=NE), comp(alu(0x29, 1, 1), cond=EQ)],
+   "ASTATX=1,R1=a,S1=14,R3=0,S3=0", "R3=0,S3=1,R1=b,S1=14,ASTATX=0,ASTATY=0")
+#   AZ is set in PEx only.  IF NE R3 = R3 + 1: false in PEx (R3 stays 0), true in PEy (S3 = 1,
+#   AZy = 0); IF EQ R1 = R1 + 1: true in PEx (AZx untouched so far: R1 = 0xb, AZx = 0), false in
+#   PEy (S1 stays 0x14) (PGR 9-10, Table 4-39)
+st("simd_branch_and", [("JUMP", 2, EQ), comp(alu(0x29, 5, 5)), ("JUMP", 4, NE), comp(alu(0x29, 6, 6))],
+   "ASTATX=1", "R5=1,S5=1,R6=0,S6=0")
+#   IF EQ JUMP: true in PEx only -> not taken (Table 4-48), so R5 = S5 = 1, which clears AZx and
+#   AZy; IF NE JUMP: now true in both PEs -> taken, over R6 = R6 + 1
+st("simd_dreg_move", [dag("R2", 0, 0, 1), ureg_imm("I0", 0x90000), dag("R3", 0, 0, 0),
+                      dag("R2", 1, 0, 1)],
+   "I0=90000,M0=1,I1=120000,R2=11,S2=22",
+   "d4:90000=11,d4:90001=22,I0=90001,R3=11,S3=22,d4:120000=11,d4:120001=0,d4:120002=22,I1=120001")
+#   DM(I0,M0) = R2: R2 -> 0x90000, S2 -> 0x90001 (normal word, +1); I0 post-modified once;
+#   R3 = DM(I0,M0): R3 <- 0x90000, S3 <- 0x90001;
+#   DM(I1,M0) = R2 with I1 in short-word space: S2 goes to I1 + 2 (PGR Table 6-4)
+st("simd_ureg_pairs", [umov("USTAT1", "R0"), umov("PX1", "USTAT1"), umov("R1", "PX1"), umov("R7", "I3"),
+                       umov("I4", "S0")],
+   "R0=5,S0=6,I3=77", "USTAT1=5,USTAT2=6,PX1=5,PX2=6,R1=5,S1=6,R7=77,S7=77,I4=6")
+#   USTAT1 = R0 also USTAT2 = S0; PX1 = USTAT1 also PX2 = USTAT2; R1 = PX1 also S1 = PX2
+#   (complementary pairs, Table 2-4); R7 = I3 also S7 = I3 (uncomplementary source, Table 4-43);
+#   I4 = S0: explicit only (uncomplementary destination, Table 4-44)
+st("simd_swap_cond", [swap(3, 4, cond=EQ), swap(5, 6, cond=NE)],
+   "ASTATY=1,R3=33,S4=44,R5=55,S6=66", "R3=33,S4=33,R5=66,S6=66")
+#   IF EQ R3 <-> S4: EQ false in PEx (R3 not loaded), true in PEy (S4 <- R3 = 0x33) (Table 4-40);
+#   IF NE R5 <-> S6: true in PEx (R5 <- S6 = 0x66), false in PEy (S6 kept)
+st("simd_else", [jrel6(2, cond=EQ, c=alu(0x29, 1, 1), e=1), jrel6(2, cond=EQ, c=alu(0x29, 2, 2))],
+   "ASTATX=1,R1=a,S1=14,R2=0,S2=0", "R1=a,S1=15,R2=1,S2=0")
+#   IF EQ JUMP (PC, 2), ELSE R1 = R1 + 1: EQ in PEx only -> no jump; ELSE runs in PEy only
+#   (S1 = 21; AZy stays 0) (Table 4-50); IF EQ JUMP (PC, 2), R2 = R2 + 1: still no jump; the
+#   compute runs where EQ holds: PEx (R2 = 1), not PEy
+st("simd_modify_or", [modify(0, 0, cond=EQ), dag("R2", 1, 1, 1, cond=EQ)],
+   "ASTATY=1,I0=100,M0=4,I1=90010,M1=2,R2=11,S2=22",
+   "I0=104,I1=90012,d4:90010=0,d4:90011=22")
+#   IF EQ MODIFY(I0, M0): EQ in PEy only, the modify happens on the OR (PGR 9-27);
+#   IF EQ DM(I1,M1) = R2: the explicit store (PEx) does not happen, the implicit (PEy) does,
+#   the post-modify happens on the OR (Table 4-39, 4-45)
+st("simd_bit_tst", [bitop(4, 0x70, 0x80000000)], "USTAT1=1,USTAT2=80000000,ASTATX=40000",
+   "ASTATX=0,ASTATY=40000")
+#   BIT TST USTAT1 bit 31: false for USTAT1 (BTF, bit 18 of ASTATx, cleared), true for its
+#   complement USTAT2 (BTF set in ASTATy) (PGR 9-66, "Bit Test Flag in SIMD Mode")
+
+
 # ---------------------------------------------------------------- VISA programs
 # Parcels: ("16", v), ("32", v), ("48", v) or ("call_db", k) / ("jump", k) to parcel k
 # (48-bit, absolute short-word target).  ctx entries set dslot/dslot2 at a parcel.
@@ -278,15 +360,21 @@ def assemble_visa(sw, data):
 
 
 def assemble():
-    """Place the ISA programs at consecutive 48-bit addresses; return (bytes, tests, ranges)."""
+    """Place the ISA programs (T, then the SIMD ones, ST) at consecutive 48-bit addresses; return
+    (bytes, tests, end, start of the SIMD programs)."""
     data = bytearray()
     lines = []
     sw = BASE
-    for name, words, init, expect in T:
+    simd = None
+    for k, (name, words, init, expect) in enumerate(T + ST):
+        if k == len(T):
+            simd = sw
         start = sw
         a48 = (start + 0x80000) // 3
         out = []
         for w in words:
+            if isinstance(w, tuple):            # ("JUMP", k, cond): conditional jump to instruction k
+                w = branch(a48 + w[1], cond=w[2])
             if isinstance(w, str):              # CALL<k>, CALLDB<k>, JUMP<k>: to instruction k
                 kind = w.rstrip("0123456789")
                 k = int(w[len(kind):])
@@ -298,18 +386,19 @@ def assemble():
         lines.append(f"{name} {start:x} {sw:x} {init or '-'} {expect}")
         data += (0).to_bytes(6, "big")          # a NOP after each program (the stop address)
         sw += 3
-    return bytes(data), lines, sw
+    return bytes(data), lines, sw, simd
 
 
 def main():
     out = Path(sys.argv[1])
     out.mkdir(parents=True, exist_ok=True)
-    data, lines, end = assemble()
+    data, lines, end, simd = assemble()
     data = bytearray(data)
     vlines, vctx, _ = assemble_visa(end, data)
     (out / "emu.bin").write_bytes(bytes(data))
     (out / "tests.txt").write_text("\n".join(lines + vlines) + "\n")
-    (out / "ctx.txt").write_text(" ".join([f"ctx:visa=0@{BASE:x}-{end - 1:x}"] + vctx) + "\n")
+    (out / "ctx.txt").write_text(" ".join([f"ctx:visa=0@{BASE:x}-{end - 1:x}", f"ctx:simd=1@{simd:x}-{end - 1:x}"]
+                                          + vctx) + "\n")
     print(f"{len(lines) + len(VT)} emulator tests")
 
 

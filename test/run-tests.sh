@@ -12,8 +12,10 @@
 #    b. the multiplier opcodes against a transcription of PGR Tables 12-5..12-9 (mult_check.py)
 #    c. VISA (no reference tool knows it): 48-bit VISA = ISA, 32-bit forms = ISA without the compute,
 #       type 2b = type 2a IF TRUE (visa_check.py), every 16-bit parcel against its ISA equivalent (visa16.py)
-# 4. every SLEIGH constructor is reached by those corpora (with the loop-end and delay-slot contexts swept)
-# 5. p-code: hand-computed emulator tests (EmuCheck.java), including a deliberately wrong expectation
+# 4. every SLEIGH constructor is reached by those corpora (with the loop-end and delay-slot contexts swept,
+#    and again in SIMD mode, simd = 1)
+# 5. p-code: hand-computed emulator tests (EmuCheck.java), including a deliberately wrong expectation;
+#    the simd_* programs run with the simd context set (PEy enabled)
 # --real adds step 6 (test/real-binaries.sh).
 #
 # Environment: GHIDRA_INSTALL_DIR (a scratch Ghidra 12.1.x or 12.2; the module is symlinked into its
@@ -97,6 +99,14 @@ GS "$W/v16.v16" Reach.java "$W/r4.txt" 6 ctx:visa=1 &
 GS "$W/small.gh" Reach.java "$W/r5.txt" 6 ctx:visa=0 ctx:lend=1 sweep:lterm:0:31 &
 GS "$W/vc.v2b" Reach.java "$W/r6.txt" 6 ctx:visa=1 &
 GS "$W/c.gh" Reach.java "$W/r7.txt" 6 ctx:visa=0 ctx:brm0=1 ctx:brm8=1 &
+wait
+# the SIMD (simd = 1) constructors: the same corpora with PEy enabled
+GS "$W/c.gh" Reach.java "$W/rA.txt" 6 ctx:visa=0 ctx:simd=1 &
+GS "$W/vc.v48" Reach.java "$W/rB.txt" 6 ctx:visa=1 ctx:simd=1 &
+GS "$W/vc.v32" Reach.java "$W/rC.txt" 6 ctx:visa=1 ctx:simd=1 &
+GS "$W/v16.v16" Reach.java "$W/rD.txt" 6 ctx:visa=1 ctx:simd=1 &
+GS "$W/small.gh" Reach.java "$W/rE.txt" 6 ctx:visa=0 ctx:lend=1 ctx:simd=1 sweep:lterm:0:31 &
+GS "$W/vc.v2b" Reach.java "$W/rF.txt" 6 ctx:visa=1 ctx:simd=1 &
 wait
 cat "$W"/r?.txt | sort -u > "$W/reach.txt"
 python3 "$HERE/reach.py" "$MOD/data/languages" "$W/reach.txt" || fail=1
