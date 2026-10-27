@@ -34,6 +34,17 @@
   <global>
     <range space="sw"/>
     <range space="dm"/>
+    <!-- Registers that drive or reflect hardware (flag pins, interrupt masks and latches, the
+         memory and interrupt mode bits): writes to them are effects, not dead stores.  MODE1 is
+         not listed: its start-up value is tracked below, which a global would show as a write
+         at every function entry. -->
+    <register name="FLAGS"/>
+    <register name="IMASK"/>
+    <register name="IMASKP"/>
+    <register name="IRPTL"/>
+    <register name="LRPTL"/>
+    <register name="MMASK"/>
+    <register name="MODE2"/>
   </global>
   <stackpointer register="I7" space="dm" growth="negative"/>
   <returnaddress>
@@ -47,6 +58,12 @@
       <set name="M13" val="0"/>
       <set name="M14" val="1"/>
       <set name="M15" val="0xffffffff"/>
+      <!-- MODE1 as the C run-time start-up leaves it (___lib_setup_c in CrossCore Embedded Studio
+           executables: from the reset value 0, BIT SET MODE1 0x78, BIT CLR MODE1 0xa078, BIT SET
+           MODE1 0x1011800): NESTM, IRPTEN, RND32 and CBUFEN set; ALUSAT and TRUNC clear, so
+           compiled integer arithmetic wraps and the saturation p-code folds away.  Code that
+           changes MODE1 (BIT SET MODE1 TRUNC around a FIX, PEYEN for SIMD) is followed. -->
+      <set name="MODE1" val="0x1011800"/>
       <!-- The run time keeps the circular-buffer length registers zero outside code that sets up
            a circular buffer, so post-modify addressing is linear (the circular-buffer p-code folds
            away). -->
