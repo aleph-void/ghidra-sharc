@@ -29,6 +29,10 @@ parcel).  A field "aH_L" is instruction bits H..L inside i32, "bH_L" inside i16 
 inside s16.  VISA 32-bit forms are the 48-bit forms with the compute field truncated and
 bits 22..16 = 0x3f (PGR ch. 9 preamble), so both are generated from one description.
 
+SIMD (context bit simd = 1, MODE1 PEYEN on): separate constructors, generated after all the
+others, add the implicit PEy half of each instruction (see "SIMD (PEy)" below); with simd = 0
+the SISD constructors are the only ones that match.
+
 The output is deterministic.  DEBUG=1 prints a summary of the generated tables.
 """
 import os
@@ -60,6 +64,21 @@ class Fields:
         self.signed = set()
         self.meta = {}             # name -> (hi, lo, tok, signed)
         self.nalias = 0
+        self.attach_y = {}         # SIMD twin field -> register list (rendered after the others)
+
+    def twin(self, name, regs, suffix="Y"):
+        """A field over the same bits as `name` attached to `regs` (the SIMD complement of an
+        operand: the PEy register for a PEx one, PGR Table 10-3)."""
+        n = name + suffix
+        if n in self.attach_y:
+            if self.attach_y[n] != regs:
+                raise ValueError(f"twin {n} attached to two register lists")
+            return n
+        hi, lo, tok, sg = self.meta[name]
+        self.defs[tok][n] = self.defs[tok][name]
+        self.meta[n] = (hi, lo, tok, sg)
+        self.attach_y[n] = regs
+        return n
 
     def tok_of(self, name):
         return self.meta[name][2]
@@ -114,7 +133,8 @@ class Fields:
                 out.append(f"  {n} = ({l},{h}){' signed' if n in self.signed else ''}")
             out.append(";")
         # group attaches by identical lists
-        for kind, table in (("variables", self.attach_vars), ("names", self.attach_names)):
+        for kind, table in (("variables", self.attach_vars), ("names", self.attach_names),
+                            ("variables", self.attach_y)):
             groups = {}
             for n, lst in table.items():
                 groups.setdefault(tuple(lst), []).append(n)
@@ -470,6 +490,49 @@ def uniq(code, tag):
     return re.sub(r"<(\w+)>", rf"<\1_{tag}>", code)
 
 
+# ---------------------------------------------------------------- SIMD (PEy)
+# With the context bit `simd` set (MODE1 PEYEN assumed on) every instruction also performs its
+# implicit PEy half (PGR "SIMD Mode", ch. 9 "SIMD Explicit/Implicit Operation" of each type).
+# The PEy compute is the PEx compute on the complementary registers: Rn -> Sn, MRF/MRB ->
+# MSF/MSB, the ASTATx/STKYx flags -> ASTATy/STKYy, the bit FIFO -> PEy's own.  Immediate data
+# is shared.  SIMD constructors are generated after all others and only ever add `simd=1`
+# forms, so SISD (simd = 0) decoding and p-code are those of the plain constructors.
+_YFLAGS = "AZ AV AN AC AS AI MN MV MU MI AF SV SZ SS BTF CACC AUS AVS AOS AIS MOS MVS MUS MIS".split()
+_YMACROS = "fixres fixlogic aluadd compflags fltres fltov fltinv fixconv fpack".split()
+YMAP = {w: w + "Y" for w in _YFLAGS + _YMACROS}
+YMAP.update({"MRF": "MSF", "MRB": "MSB", "MR0F": "MS0F", "MR1F": "MS1F", "MR2F": "MS2F", "MR0B": "MS0B",
+             "MR1B": "MS1B", "MR2B": "MS2B", "BFF": "BFFY", "BFFWRP": "BFFWRPY", "SF": "SFY"})
+YMAP.update({f"R{i}": f"S{i}" for i in range(16)})
+# Complementary universal registers (PGR Table 10-3, Table 2-4, Table 4-39 note 1): the PEx and
+# PEy data registers, USTAT1/2, USTAT3/4, ASTATx/y, STKYx/y and PX1/2.  Every other universal
+# register has no complement; its implicit transfer goes to the never-read sink NOCOMP.
+COMP = {}
+for _a, _b in ([(f"R{i}", f"S{i}") for i in range(16)] +
+               [("USTAT1", "USTAT2"), ("USTAT3", "USTAT4"), ("ASTATX", "ASTATY"), ("STKYX", "STKYY"),
+                ("PX1", "PX2")]):
+    COMP[_a], COMP[_b] = _b, _a
+CUREG = [COMP.get(r, "NOCOMP") for r in S.UREG]
+
+
+def ytwin(fld):
+    """The PEy twin of a register-operand field (attached to the complementary registers)."""
+    return FL.twin(fld, [COMP.get(r, "NOCOMP") for r in FL.attach_vars[fld]])
+
+
+def yify(code):
+    """PEy version of PEx compute p-code (or pattern text): data-register fields become their
+    S-register twins; flags, flag macros, MR registers and the bit FIFO become PEy's."""
+    def rep(m):
+        w = m.group(0)
+        if w in YMAP:
+            return YMAP[w]
+        regs = FL.attach_vars.get(w)
+        if regs and all(r in R for r in regs):
+            return ytwin(w)
+        return w
+    return re.sub(r"\b[A-Za-z_]\w*\b", rep, code)
+
+
 # Multifunction fixed-point multiplies (PGR 11-92): SSFR products into Rm, SSF accumulation
 # into MRF; the equivalent single-function opcodes give their p-code.
 MF_MUL = {0x04: 0x79, 0x0C: 0xB9, 0x14: 0xF9, 0x08: 0xBC, 0x10: 0xFC}
@@ -593,6 +656,18 @@ class Compute:
             self.add([f"{mf}=1", f"{mrd}=0", f"{dbit}=0"], [f"{sel}={code}"], f"R{{n}} = {mr}", rd + clr)
             self.add([f"{mf}=1", f"{mrd}=0", f"{dbit}=1"], [f"{sel}={code}"], f"{mr} = R{{n}}", wr + clr)
 
+    def render_y(self, sub):
+        """The PEy half of every op (no display): the same encodings on the complementary
+        registers and PEy's flags (PGR "SIMD Mode", Listing 3-6)."""
+        if self.L.name == "2b":
+            zpat = f"{FL.f(38, 16)}=0"
+        else:
+            zpat = f"{FL.f(22, 16)}=0 ; {FL.f(15, 0)}=0"
+        out = [f"{sub}: is {zpat} {{ }}"]
+        for pat, d, pcode in self.ops:
+            out.append(f"{sub}: is {yify(pat)} {{ {yify(pcode)} }}")
+        return "\n".join(out)
+
     def render(self, sub, prefix="", suffix="", zero_display=""):
         """One subtable `sub`: each op displayed as prefix+op+suffix; compute==0 -> zero_display."""
         out = []
@@ -648,6 +723,26 @@ def cond_tables():
     return "\n".join(cc)
 
 
+def cond_tables_y():
+    """PEy conditions (no display): CCY, CCNY, CCN16Y evaluate the condition on PEy's flags
+    (PGR "Conditional Instruction Execution in SIMD Mode"); in SIMD a DO UNTIL loop ends when the
+    termination tests true in both PEs (PGR Table 4-39, type 13)."""
+    cc = []
+    cc.append(f"CCY: is {FL.f(37, 33)}=31 {{ local t:1 = 1; export t; }}")
+    for k in range(31):
+        cc.append(f"CCY: is {FL.f(37, 33)}={k} {{ local t:1 = {yify(COND_EXPR[k])}; export t; }}")
+    for tab, fld in (("CCNY", FL.f(37, 33)), ("CCN16Y", FL.f(37, 33, tok="s16"))):
+        for k in range(31):
+            cc.append(f"{tab}: is {fld}={k} {{ local t:1 = {yify(COND_EXPR[k])}; export t; }}")
+    for k in range(31):
+        if k != 15:
+            cc.append(f"LTERM: is simd=1 & lterm={k} {{ local t:1 = ({COND_EXPR[k]}) && ({yify(COND_EXPR[k])}); export t; }}")
+    return "\n".join(cc)
+
+
+SIMD_OUT = []
+
+
 def gen():
     C48 = Compute(Layout("48"), "c48")
     C2B = Compute(Layout("2b"), "c2b")
@@ -658,6 +753,12 @@ def gen():
     parts.append(C48.render("CMP48e", prefix=", ELSE "))       # else-compute
     parts.append(C2B.render("CMP2B"))
     parts += instr_types()
+    # SIMD (simd = 1) forms, after everything else
+    parts.append("# ================================================================ SIMD (simd = 1)")
+    parts.append(cond_tables_y())
+    parts.append(C48.render_y("CY48"))
+    parts.append(C2B.render_y("CY2B"))
+    parts += SIMD_OUT
     return parts
 
 
@@ -836,6 +937,98 @@ def instr_types():
         """A conditional non-branch instruction: everything is skipped when `cc` is false."""
         return f"build {cc}; if (!{cc}) goto <skip>; " + " ".join(s for s in stmts if s) + " <skip>"
 
+    # ---------------- SIMD helpers.  sout collects the simd = 1 constructors (emitted last).
+    sout = SIMD_OUT
+    scnt = [0]
+
+    def G(cond, stmts):
+        """stmts, executed only when `cond` holds (None: always)."""
+        if not stmts.strip():
+            return ""
+        if cond is None:
+            return stmts
+        scnt[0] += 1
+        return f"if (!({cond})) goto <g{scnt[0]}>; {stmts} <g{scnt[0]}>"
+
+    def g_or(a, b):
+        return None if a is None or b is None else f"({a} || {b})"
+
+    def g_and(*xs):
+        xs = [x for x in xs if x is not None]
+        return None if not xs else (xs[0] if len(xs) == 1 else "(" + " && ".join(xs) + ")")
+
+    def scond(mn, dsp, pat, body, true_form=True):
+        """The simd = 1 forms of a conditional non-branch instruction: once per condition code
+        (CCN for PEx, CCNY for PEy; body(cx, cy) gets the two condition locals) and once for
+        TRUE (body(None, None)).  dsp starts with "CC^", pat names CC."""
+        pc = re.sub(r"\bCC\b", "CCN & CCNY", pat)
+        sout.append(f"instr: {mn} {dsp.replace('CC^', 'CCN^', 1)} is {pc} "
+                    f"{{ build CCN; build CCNY; local cx:1 = CCN; local cy:1 = CCNY; {body('cx', 'cy')} }}")
+        if true_form:
+            pt = re.sub(r"\bCC\b", f"{FL.f(37, 33)}=31", pat)
+            sout.append(f"instr: {mn} {dsp.replace('CC^', '', 1)} is {pt} {{ {body(None, None)} }}")
+
+    def smem(space_g, d, ir, mr, reg, creg, gx, gy, post=True, lw=False, bi=None, nb=None, nbi=None, hc=None):
+        """SIMD DAG access (PGR Table 6-4; Tables 4-39, 4-45, 4-46; ch. 9 types 1, 3, 4, 6, 10):
+        the explicit register reg at the explicit address when PEx's condition gx holds, the
+        complementary register creg at the implicit address (+1 NW / +2 SW, simdea) when PEy's
+        condition gy holds; the post-modify when either holds, a pre-modify always.  hc is the
+        subtable telling whether a universal register has a complement: an uncomplementary
+        register moves once, when either condition holds (PGR "Listing 4 - UREG to IOP Memory
+        Space", Table 4-39).  (LW) accesses are the same as in SISD (PGR "Long Word Addressing of
+        Single-Data"): no implicit transfer.  Returns (pre, body, pattern) as mem() does."""
+        scnt[0] += 1
+        z = scnt[0]
+        pat = ""
+        if post:
+            bf, lf, iv, brv = dag(ir)
+            pat = f" & {bf} & {lf} & {iv} & {brv}"
+            calc = (f"local ea{z}:4 = {ir}; if (!(({iv} == 0:4) && {brv})) goto <nbr{z}>; bitrev32(ea{z}); <nbr{z}> ")
+            upd = f"postmod({ir}, {mr}, {bf}, {lf});"
+        else:
+            calc = f"local ea{z}:4 = {ir} + {mr}; "
+            upd = ""
+        if lw:
+            calc += f"ea{z} = ea{z} & 0xfffffffe; "
+            pat += f" & {nb}" + (f" & {nbi}" if nbi and not d else "")
+            ge, gi = gx, None
+        else:
+            calc += f"local ey{z}:4 = 0; local ok{z}:1 = 0; simdea(ey{z}, ok{z}, ea{z}); "
+            pat += f" & {creg}" + (f" & {hc}" if hc else "")
+            ge = g_or(gx, g_and(gy, f"({hc} == 0)")) if hc else gx
+            gi = g_and(gy, hc, f"ok{z}")
+        gp = g_or(gx, gy)
+        if d:
+            pre = f"local sv{z}:4 = {reg};" + (f" local sw{z}:4 = {nb};" if lw else f" local sy{z}:4 = {creg};")
+            body = calc + G(ge, f"*[dm]:4 ea{z} = sv{z};" + (f" *[dm]:4 (ea{z} + 1) = sw{z};" if lw else ""))
+            if not lw:
+                body += " " + G(gi, f"*[dm]:4 ey{z} = sy{z};")
+            return pre, body + " " + G(gp, upd), pat
+        # loads: memory is read after the post-modify (from the address taken before it), which
+        # is the same as the SISD order load, post-modify, register write
+        ld = f"local lv{z}:4 = *[dm]:4 ea{z}; {reg} = lv{z};" + (f" {bi} = lv{z};" if bi else "")
+        if lw:
+            ld += f" local lw{z}:4 = *[dm]:4 (ea{z} + 1); {nb} = lw{z}; {nbi} = lw{z};"
+        body = calc + G(gp, upd) + " " + G(ge, ld)
+        if not lw:
+            body += " " + G(gi, f"local ly{z}:4 = *[dm]:4 ey{z}; {creg} = ly{z};")
+        return "", body, pat
+
+    def cpe(gx, gy, cmp="CMP48s", cy="CY48"):
+        """Both PEs' computes, each under its own condition."""
+        return G(gx, f"build {cmp};") + " " + G(gy, f"build {cy};")
+
+    # Complement tests for universal-register fields: HCxx exports 1 when the register has a
+    # SIMD complement (PGR Table 10-3).
+    for nm, hi, lo, codes in (("HC29", 29, 23, range(128)), ("HC38", 38, 32, range(128)),
+                              ("HCS", 35, 32, range(16))):
+        fld = f(hi, lo)
+        lst = [f"{nm}: is {fld} {{ export 0:1; }}"]
+        for c in codes:
+            if (S.UREG[c] if nm != "HCS" else S.UREG[112 + c]) in COMP:
+                lst.append(f"{nm}: is {fld}={c} {{ export 1:1; }}")
+        sout.append("\n".join(lst))
+
     # ---------------- Type 1 (compute + dual move)
     dmd, pmd = f(44, 44), f(37, 37)
     dmi, dmm = regs(43, 41, I1), regs(40, 38, M1)
@@ -851,10 +1044,24 @@ def instr_types():
                        f'{{ {a_pre} {b_pre} build CMP48s; {a_p} {b_p} }}')
             out.append(f'instr: PAR {a_d}^", "^{b_d} is visa=1 & {base} & {nocomp} '
                        f'{{ {a_pre} {b_pre} {a_p} {b_p} }}')
+            # SIMD: both PEs compute; PEy moves the complementary registers at I + k (PGR 9-8)
+            ya_pre, ya_p, ya_pat = smem(0, dd, dmi, dmm, dmr, ytwin(dmr), None, None)
+            yb_pre, yb_p, yb_pat = smem(1, pd, pmi, pmm, pmr, ytwin(pmr), None, None)
+            sbase = (f"simd=1 & {f(47, 45)}=1 & {dmd}={dd} & {pmd}={pd} & {dmi} & {dmm} & {dmr} & {pmi} & {pmm} & {pmr}"
+                     + ya_pat + yb_pat)
+            sout.append(f'instr: PAR CMP48s^{a_d}^", "^{b_d} is ({sbase}) ... & CMP48s & CY48 '
+                        f'{{ {ya_pre} {yb_pre} build CMP48s; build CY48; {ya_p} {yb_p} }}')
+            sout.append(f'instr: PAR {a_d}^", "^{b_d} is visa=1 & {sbase} & {nocomp} '
+                        f'{{ {ya_pre} {yb_pre} {ya_p} {yb_p} }}')
     # ---------------- Type 2
     out.append(f"instr: COMP CC^CMP48 is ({f(47, 40)}=0x01 & {f(39, 39)}=0 & CC) ... & CMP48 "
                f"{{ {cond_body('CC', 'build CMP48;')} }}")
     out.append(f"instr: COMP CMP2B is visa=1 & {f(47, 40)}=0x01 & {f(39, 39)}=1 & CMP2B {{ build CMP2B; }}")
+    # SIMD: the compute runs in each PE whose condition is true (PGR 9-10)
+    scond("COMP", "CC^CMP48", f"(simd=1 & {f(47, 40)}=0x01 & {f(39, 39)}=0 & CC) ... & CMP48 & CY48",
+          lambda cx, cy: cpe(cx, cy, "CMP48"))
+    sout.append(f"instr: COMP CMP2B is simd=1 & visa=1 & {f(47, 40)}=0x01 & {f(39, 39)}=1 & CMP2B & CY2B "
+                f"{{ build CMP2B; build CY2B; }}")
     # 2c short compute (16-bit)
     sop = f(43, 40, tok="s16")
     sn = regs(39, 36, R, tok="s16")
@@ -893,6 +1100,9 @@ def instr_types():
         sem = short_sem(op, sn, sx)
         flds = " & ".join(sorted(set(used) | {sn, sx}))
         out.append(f"instr: SCOMP {d} is visa=1 & {f(47, 44, tok='s16')}=0xc & {sop}={op} & {flds} {{ {sem} }}")
+        ysem = yify(uniq(sem, "y"))
+        sout.append(f"instr: SCOMP {d} is simd=1 & visa=1 & {f(47, 44, tok='s16')}=0xc & {sop}={op} & {flds} & "
+                    f"{ytwin(sn)} & {ytwin(sx)} {{ {sem} {ysem} }}")
     # ---------------- Type 3 (ureg <-> DM/PM, I/M register)
     u, g, d_, lw = f(44, 44), f(32, 32), f(31, 31), f(30, 30)
     for gg in (0, 1):
@@ -910,6 +1120,20 @@ def instr_types():
                                f"{{ {cond_body('CC', pre, 'build CMP48s;', pc)} }}")
                     out.append(f"instr: MOVE CC^{dsp} is visa=1 & {base} & CC & {nocomp} "
                                f"{{ {cond_body('CC', pre, pc)} }}")
+                    # SIMD (PGR 9-14): Cureg at the implicit address; Tables 4-39, 4-45, 4-46
+                    sb = (f"simd=1 & {f(47, 45)}=2 & {u}={uu} & {g}={gg} & {d_}={dd} & {lw}={ll} & "
+                          f"{ir} & {mr} & {src}" + ("" if dd else f" & {bi29}"))
+                    cu = FL.twin(ureg29, CUREG)
+                    _, _, spat = smem(gg, dd, ir, mr, src, cu, "cx", "cy", post=bool(uu), lw=bool(ll),
+                                      bi=None if dd else bi29, nb=nb29, nbi=nbi29, hc="HC29")
+
+                    def b3(cx, cy, cmp=True, gg=gg, dd=dd, ir=ir, mr=mr, src=src, cu=cu, uu=uu, ll=ll):
+                        spre, sp, _ = smem(gg, dd, ir, mr, src, cu, cx, cy, post=bool(uu), lw=bool(ll),
+                                           bi=None if dd else bi29, nb=nb29, nbi=nbi29, hc="HC29")
+                        return f"{spre} {cpe(cx, cy) if cmp else ''} {sp}"
+                    scond("MOVE", f"CC^CMP48s^{dsp}", f"({sb}{spat} & CC) ... & CMP48s & CY48", b3)
+                    scond("MOVE", f"CC^{dsp}", f"simd=1 & visa=1 & {sb[9:]}{spat} & CC & {nocomp}",
+                          lambda cx, cy, b3=b3: b3(cx, cy, cmp=False))
     # 3c (16-bit): 1001 DMI DMM D 1 DREG
     s_dmi, s_dmm = regs(43, 41, I1, tok="s16"), regs(40, 38, M1, tok="s16")
     s_d, s_r = f(37, 37, tok="s16"), regs(35, 32, R, tok="s16", kind="c")
@@ -917,6 +1141,9 @@ def instr_types():
         dsp, pre, pc, mpat = mem(0, dd, s_dmi, s_dmm, s_r)
         out.append(f"instr: MOVE {dsp} is visa=1 & {f(47, 44, tok='s16')}=0x9 & {f(36, 36, tok='s16')}=1 & "
                    f"{s_d}={dd} & {s_dmi} & {s_dmm} & {s_r}{mpat} {{ {pre} {pc} }}")
+        spre, sp, spat = smem(0, dd, s_dmi, s_dmm, s_r, ytwin(s_r), None, None)
+        sout.append(f"instr: MOVE {dsp} is simd=1 & visa=1 & {f(47, 44, tok='s16')}=0x9 & {f(36, 36, tok='s16')}=1 & "
+                    f"{s_d}={dd} & {s_dmi} & {s_dmm} & {s_r}{spat} {{ {spre} {sp} }}")
     # ---------------- Type 4 (6-bit immediate modifier, dreg)
     d6 = f(32, 27, signed=True)
     dreg4 = regs(26, 23, R, kind="t4")
@@ -931,6 +1158,16 @@ def instr_types():
                            f"{{ {cond_body('CC', pre, 'build CMP48s;', pc)} }}")
                 out.append(f"instr: MOVE CC^{dsp} is visa=1 & {base} & CC & {nocomp} "
                            f"{{ {cond_body('CC', pre, pc)} }}")
+                # SIMD (PGR 9-19): Cdreg at the implicit address
+                sb = f"simd=1 & {f(47, 44)}=0x6 & {gb}={gg} & {db}={dd} & {ub}={uu} & {ir} & {d6} & {dreg4}"
+                _, _, spat = smem(gg, dd, ir, d6, dreg4, ytwin(dreg4), "cx", "cy", post=bool(uu))
+
+                def b4(cx, cy, cmp=True, gg=gg, dd=dd, ir=ir, uu=uu):
+                    spre, sp, _ = smem(gg, dd, ir, d6, dreg4, ytwin(dreg4), cx, cy, post=bool(uu))
+                    return f"{spre} {cpe(cx, cy) if cmp else ''} {sp}"
+                scond("MOVE", f"CC^CMP48s^{dsp}", f"({sb}{spat} & CC) ... & CMP48s & CY48", b4)
+                scond("MOVE", f"CC^{dsp}", f"simd=1 & visa=1 & {sb[9:]}{spat} & CC & {nocomp}",
+                      lambda cx, cy, b4=b4: b4(cx, cy, cmp=False))
     # ---------------- Type 5 (ureg = ureg ; dreg <-> cdreg)
     srch, srcl = f(42, 38), f(32, 31)
     srcsub = []
@@ -955,6 +1192,33 @@ def instr_types():
                f'{{ {cond_body("CC", swp_pre, "build CMP48s;", swp)} }}')
     out.append(f'instr: SWAP CC^{swr}^" <-> "^{cdr} is visa=1 & {base5s} & CC & {nocomp} '
                f'{{ {cond_body("CC", swp_pre, swp)} }}')
+    # SIMD (PGR 9-23, Tables 4-39..4-44): ureg1 = ureg2 also moves Cureg2 (or, for a source
+    # without a complement, ureg2 itself) to Cureg1 under PEy's condition; a destination without
+    # a complement gets only the explicit move (its implicit write goes to NOCOMP).  The swap
+    # is the same as in SISD, its halves under PEx's (Rx) and PEy's (Sy) conditions (Table 4-40).
+    csrc = []
+    for code, nm in enumerate(UREG):
+        cn = COMP.get(nm, nm)
+        if cn == "PC":
+            csrc.append(f'CSRCU: is {srch}={code >> 2} & {srcl}={code & 3} & PCVAL {{ export PCVAL; }}')
+        else:
+            csrc.append(f'CSRCU: is {srch}={code >> 2} & {srcl}={code & 3} {{ export {cn}; }}')
+    sout.append("\n".join(csrc))
+    cdest = FL.twin(dest5, CUREG)
+
+    def b5(cx, cy, cmp=True):
+        return (f"local t5:4 = SRCU; local t5y:4 = CSRCU; {cpe(cx, cy) if cmp else ''} "
+                f"{G(cx, f'{dest5} = t5; {bi29} = t5;')} {G(cy, f'{cdest} = t5y;')}")
+    sb5 = f"simd=1 & {base5} & CSRCU & {cdest}"
+    scond("MOVE", f'CC^CMP48s^{dest5}^" = "^SRCU', f"({sb5} & CC) ... & CMP48s & CY48", b5)
+    scond("MOVE", f'CC^{dest5}^" = "^SRCU', f"simd=1 & visa=1 & {sb5[9:]} & CC & {nocomp}",
+          lambda cx, cy: b5(cx, cy, cmp=False))
+
+    def b5s(cx, cy, cmp=True):
+        return f"{swp_pre} {cpe(cx, cy) if cmp else ''} {G(cx, f'{swr} = tc;')} {G(cy, f'{cdr} = ts;')}"
+    scond("SWAP", f'CC^CMP48s^{swr}^" <-> "^{cdr}', f"(simd=1 & {base5s} & CC) ... & CMP48s & CY48", b5s)
+    scond("SWAP", f'CC^{swr}^" <-> "^{cdr}', f"simd=1 & visa=1 & {base5s} & CC & {nocomp}",
+          lambda cx, cy: b5s(cx, cy, cmp=False), true_form=False)
     # ---------------- Type 6 (shift immediate [+ move]); SHIFTIM: 6-bit op at 21..16,
     # data8 at 15..8, Rn 7..4, Rx 3..0; DATAEX (30..27) extends data to 12 bits (bit6:len6).
     sh_rn, sh_rx = regs(7, 4, R, kind="sh"), regs(3, 0, R, kind="sh")
@@ -1001,6 +1265,18 @@ def instr_types():
             shsub.append(f"SHIMM: {dd} is {f(22, 22)}=0 & {f(21, 16)}={op6:#x} & {dataex} ; "
                          f"{' & '.join(pat_i16)}{extra} {acts} {{ {vsem or sem} }}")
     out.append("\n".join(shsub))
+    # SIMD: PEy's shift on the complementary registers; the immediate data is shared (PGR 3-40)
+    # (no display, so the len6/imm12 display symbols become p-code)
+    shy = []
+    for ln in shsub:
+        head, rest = ln.split(" is ", 1)
+        pat, body = rest.split(" {", 1)
+        pat = re.sub(r" \[ .*? \]", "", pat)
+        lenlo, u8 = FL.f(15, 14, kind="lenlo"), FL.f(15, 8, kind="u")
+        body = body.replace("local l6:4 = len6;", f"local l6:4 = {dataex}; l6 = (l6 << 2) | {lenlo};")
+        body = body.replace("local kk:4 = imm12;", f"local kk:4 = {dataex}; kk = (kk << 8) | {u8};")
+        shy.append(f"SHIMMY: is {yify(pat)} {{{yify(body)}")
+    sout.append("\n".join(shy))
     for gg in (0, 1):
         ir = regs(43, 41, I2 if gg else I1, kind=f"g{gg}")
         mr = regs(40, 38, M2 if gg else M1, kind=f"g{gg}")
@@ -1009,8 +1285,17 @@ def instr_types():
             base = f"{f(47, 44)}=0x8 & {g}={gg} & {d_}={dd} & {ir} & {mr} & {dreg4}" + mpat
             out.append(f'instr: SHIFT CC^SHIMM^", "^{dsp} is ({base} & CC) ... & SHIMM '
                        f'{{ {cond_body("CC", pre, "build SHIMM;", pc)} }}')
+            sb = f"simd=1 & {f(47, 44)}=0x8 & {g}={gg} & {d_}={dd} & {ir} & {mr} & {dreg4}"
+            _, _, spat = smem(gg, dd, ir, mr, dreg4, ytwin(dreg4), "cx", "cy")
+
+            def b6(cx, cy, gg=gg, dd=dd, ir=ir, mr=mr):
+                spre, sp, _ = smem(gg, dd, ir, mr, dreg4, ytwin(dreg4), cx, cy)
+                return f"{spre} {cpe(cx, cy, 'SHIMM', 'SHIMMY')} {sp}"
+            scond("SHIFT", f'CC^SHIMM^", "^{dsp}', f"({sb}{spat} & CC) ... & SHIMM & SHIMMY", b6)
     out.append(f"instr: SHIFT CC^SHIMM is ({f(47, 40)}=0x02 & CC) ... & SHIMM "
                f"{{ {cond_body('CC', 'build SHIMM;')} }}")
+    scond("SHIFT", "CC^SHIMM", f"(simd=1 & {f(47, 40)}=0x02 & CC) ... & SHIMM & SHIMMY",
+          lambda cx, cy: cpe(cx, cy, "SHIMM", "SHIMMY"))
     # ---------------- Type 7 (index modify)
     for gg in (0, 1):
         isr = regs(32, 30, I2 if gg else I1, kind=f"s{gg}")
@@ -1035,6 +1320,12 @@ def instr_types():
                    f'{{ {cond_body("CC", "build CMP48s;", mod)} }}')
         out.append(f'instr: MODIFY CC^{base_nm}^"MODIFY("^{isr}^", "^{mm}^")" is visa=1 & {base} & CC & {nocomp} '
                    f'{{ {cond_body("CC", mod)} }}')
+        # SIMD (PGR 9-27): the modify happens when the condition holds in either PE
+        scond("MODIFY", f'CC^CMP48s^{base_nm}^"MODIFY("^{isr}^", "^{mm}^")"',
+              f"(simd=1 & {base} & CC) ... & CMP48s & CY48",
+              lambda cx, cy, mod=mod: f"{cpe(cx, cy)} {G(g_or(cx, cy), mod)}")
+        scond("MODIFY", f'CC^{base_nm}^"MODIFY("^{isr}^", "^{mm}^")"', f"simd=1 & visa=1 & {base} & CC & {nocomp}",
+              lambda cx, cy, mod=mod: G(g_or(cx, cy), mod), true_form=False)
 
     # ---------------- branches
     b39, la38, j26, e25, ci24 = f(39, 39), f(38, 38), f(26, 26), f(25, 25), f(24, 24)
@@ -1062,6 +1353,10 @@ def instr_types():
                             dsp = dj(cdsp, ['"("', tg, '")"'], mods(j, la, ci))
                             out.append(f'instr: {mn} {dsp} is ({base}) ... & {tg} '
                                        f'{{ {cpro} {body} }}')
+                            if cond:    # SIMD: taken when the condition holds in both PEs (PGR 9-33)
+                                sbase = "simd=1 & " + re.sub(r"\bCCN\b", "CCN & CCNY", base, count=1)
+                                sout.append(f'instr: {mn} {dsp} is ({sbase}) ... & {tg} '
+                                            f'{{ build CCN; build CCNY; local cx:1 = CCN; local cy:1 = CCNY; local c:1 = cx && cy; {body} }}')
     # Type 9: indirect (Md, Ic) or PC-relative 6-bit, with compute (48-bit) or without (9b).
     # The VisualDSP++ function return, JUMP (M14, I12) (DB) (I12 = the saved PC, M14 = 1),
     # gets its own, more specific constructor.  Its calls through JUMP (DB), which store the
@@ -1100,9 +1395,26 @@ def instr_types():
                                     out.append(
                                         f'instr: {mn} {dj(cdsp, dst, mods(j, la, ci), cmp)} is ({base} & {e25}={e}) ... & {cmp} '
                                         f'{{ {cpro} {pre} {cpart} {body} }}')
+                                    # SIMD (PGR 9-37, Table 4-50): the branch on both PEs' condition,
+                                    # the compute in each PE whose condition holds (ELSE: fails)
+                                    sbase = "simd=1 & " + re.sub(r"\bCCN\b", "CCN & CCNY", base, count=1)
+                                    if cond:
+                                        nx, ny = ("!cx", "!cy") if e else ("cx", "cy")
+                                        sout.append(
+                                            f'instr: {mn} {dj(cdsp, dst, mods(j, la, ci), cmp)} is ({sbase} & {e25}={e}) ... & {cmp} & CY48 '
+                                            f'{{ build CCN; build CCNY; local cx:1 = CCN; local cy:1 = CCNY; local c:1 = cx && cy; {pre} {cpe(nx, ny, cmp)} {body} }}')
+                                    elif not e:
+                                        sout.append(
+                                            f'instr: {mn} {dj(cdsp, dst, mods(j, la, ci), cmp)} is ({sbase} & {e25}={e}) ... & {cmp} & CY48 '
+                                            f'{{ {cpro} {pre} build {cmp}; build CY48; {body} }}')
                                 out.append(
                                     f'instr: {mn} {dj(cdsp, dst, mods(j, la, ci))} is visa=1 & {base} & {e25}=0 & {nocomp} '
                                     f'{{ {cpro} {pre} {body} }}')
+                                if cond:
+                                    sbase = "simd=1 & " + re.sub(r"\bCCN\b", "CCN & CCNY", base, count=1)
+                                    sout.append(
+                                        f'instr: {mn} {dj(cdsp, dst, mods(j, la, ci))} is visa=1 & {sbase} & {e25}=0 & {nocomp} '
+                                        f'{{ build CCN; build CCNY; local cx:1 = CCN; local cy:1 = CCNY; local c:1 = cx && cy; {pre} {body} }}')
     # Type 10 (ISA only): IF cond JUMP (Md, Ic) / (PC, rel6), ELSE compute, DM move
     t10d, t10i, t10m, t10r = f(44, 44), regs(43, 41, I1, kind="t10"), regs(40, 38, M1, kind="t10"), regs(26, 23, R, kind="t10")
     for rel in (0, 1):
@@ -1115,6 +1427,12 @@ def instr_types():
                                        "goto [tg];", f" & {ipmi} & {ipmm} & ISA")
             out.append(f'instr: JUMP CC^{dst}^", ELSE "^CMP48s^{dsp} is (visa=0 & {f(47, 45)}={6 + rel} & {t10d}={dd} & {t10i} & {t10m} & {t10r} & CC{extra}{mpat}) ... & CMP48s '
                        f'{{ build CC; local c:1 = CC; {pre} if (!c) goto <nt>; {go} <nt> {mpre} build CMP48s; {pc} }}')
+            # SIMD (PGR 9-41): the jump on both PEs' condition; the ELSE compute and move in each
+            # PE whose condition fails, PEy's at I + k
+            spre, sp, spat = smem(0, 1 - dd, t10i, t10m, t10r, ytwin(t10r), "!cx", "!cy")
+            sout.append(f'instr: JUMP CC^{dst}^", ELSE "^CMP48s^{dsp} is (simd=1 & visa=0 & {f(47, 45)}={6 + rel} & {t10d}={dd} & {t10i} & {t10m} & {t10r} & CC & CCY{extra}{spat}) ... & CMP48s & CY48 '
+                        f'{{ build CC; build CCY; local cx:1 = CC; local cy:1 = CCY; {pre} if (!(cx && cy)) goto <nt>; {go} <nt> {spre} '
+                        f'{cpe("!cx", "!cy")} {sp} }}')
     # Type 11: RTS / RTI with compute (48-bit) and 11c (16-bit)
     lr24 = f(24, 24, kind="lr")
     ccf16 = f(37, 33, tok="s16")
@@ -1134,11 +1452,24 @@ def instr_types():
                                 + (" & DS" if j else "") + " & ISA")
                         out.append(f'instr: {mn} {dj(cdsp, mods(j, lr=lr and not rti), cmp)} is ({base}) ... & {cmp} '
                                    f'{{ {cpro} {cpart} {body} }}')
+                        # SIMD (PGR 9-45): as type 9
+                        sbase = "simd=1 & " + re.sub(r"\bCCN\b", "CCN & CCNY", base, count=1)
+                        if cond:
+                            nx, ny = ("!cx", "!cy") if e else ("cx", "cy")
+                            sout.append(f'instr: {mn} {dj(cdsp, mods(j, lr=lr and not rti), cmp)} is ({sbase}) ... & {cmp} & CY48 '
+                                        f'{{ build CCN; build CCNY; local cx:1 = CCN; local cy:1 = CCNY; local c:1 = cx && cy; {cpe(nx, ny, cmp)} {body} }}')
+                        elif not e:
+                            sout.append(f'instr: {mn} {dj(cdsp, mods(j, lr=lr and not rti), cmp)} is ({sbase}) ... & {cmp} & CY48 '
+                                        f'{{ build {cmp}; build CY48; {body} }}')
                 for cond, cpat, cdsp, cpro in cc_forms("CCN16", ccf16):
                     body = flow("rts", "PCSTK", cond, j)
                     base = (f"visa=1 & {f(47, 40, tok='s16')}={0x0A + rti} & {f(39, 39, tok='s16')}=1 & "
                             f"{f(38, 38, tok='s16')}={j} & {f(32, 32, tok='s16')}={lr} & {cpat}" + (" & DS" if j else "") + " & ISA")
                     out.append(f"instr: {mn} {dj(cdsp, mods(j, lr=lr and not rti))} is {base} {{ {cpro} {body} }}")
+                    if cond:
+                        sbase = "simd=1 & " + re.sub(r"\bCCN16\b", "CCN16 & CCN16Y", base, count=1)
+                        sout.append(f"instr: {mn} {dj(cdsp, mods(j, lr=lr and not rti))} is {sbase} "
+                                    f"{{ build CCN16; build CCN16Y; local c:1 = CCN16 && CCN16Y; {body} }}")
     # Types 12/13: DO loops.  The DO marks its loop-end instruction with context (lend,
     # lterm, ltop); the root table in sharc214xx.slaspec adds the loop-back there.  All forms
     # push the loop-counter stack and load CURLCNTR from LCNTR.
@@ -1171,6 +1502,16 @@ def instr_types():
         return (a0 + f"local lv:4 = *[dm]:4 ea; {ureg} = lv; {bi} = lv;" +
                 (f" local lw:4 = *[dm]:4 (ea + 1); {nb} = lw; {nbi} = lw;" if ll else ""))
 
+    def umove_s(dd, addr, ureg, src, bi, cu, hc):
+        """SIMD form of umove without (LW) (PGR types 14/15, 9-53, 9-57): the complementary
+        register Cureg at the implicit address too, when the register has a complement."""
+        a0 = f"local ea:4 = {addr}; local ey:4 = 0; local ok:1 = 0; simdea(ey, ok, ea); "
+        if dd:
+            return (a0 + f"local sv:4 = {src}; local sy:4 = {cu}; *[dm]:4 ea = sv; "
+                    + G(f"({hc} && ok)", "*[dm]:4 ey = sy;"))
+        return (a0 + f"local lv:4 = *[dm]:4 ea; {ureg} = lv; {bi} = lv; "
+                + G(f"({hc} && ok)", f"local ly:4 = *[dm]:4 ey; {cu} = ly;"))
+
     def upat(dd, ureg, src, bi, nb, nbi, ll):
         return (f"{src}" + ("" if dd else f" & {bi}") + (f" & {nb}" if ll else "") +
                 (f" & {nbi}" if ll and not dd else ""))
@@ -1191,6 +1532,12 @@ def instr_types():
                 out.append(f"instr: MOVE {dsp} is {f(47, 42)}=0x04 & {f(41, 41)}={gg} & {f(40, 40)}={dd} & {f(39, 39)}={ll} & "
                            f"{upat(dd, ureg38, src, bi38, nb38, nbi38, ll)} & {a32hi} ; {lo16} "
                            f"[ a32 = ({a32hi} << 16) | {lo16}; ] {{ {pc} }}")
+                if not ll:      # (LW) is the same in SIMD
+                    cu = FL.twin(ureg38, CUREG)
+                    pc = umove_s(dd, "a32", ureg38, src, bi38, cu, "HC38")
+                    sout.append(f"instr: MOVE {dsp} is simd=1 & {f(47, 42)}=0x04 & {f(41, 41)}={gg} & {f(40, 40)}={dd} & {f(39, 39)}={ll} & "
+                                f"{upat(dd, ureg38, src, bi38, nb38, nbi38, ll)} & {cu} & HC38 & {a32hi} ; {lo16} "
+                                f"[ a32 = ({a32hi} << 16) | {lo16}; ] {{ {pc} }}")
     # Type 15a DM(data32, Ia) <-> ureg ; 15b DM(data7, Ia)
     for gg in (0, 1):
         ir = regs(43, 41, I2 if gg else I1, kind=f"g{gg}")
@@ -1207,6 +1554,12 @@ def instr_types():
                 out.append(f"instr: MOVE {dsp} is {f(47, 45)}=5 & {f(44, 44)}={gg} & {ir} & {f(40, 40)}={dd} & {f(39, 39)}={ll} & "
                            f"{upat(dd, ureg38, src, bi38, nb38, nbi38, ll)} & {a32hi} ; {lo16} "
                            f"[ d32 = ({a32hi} << 16) | {lo16}; ] {{ {pc} }}")
+                if not ll:
+                    cu = FL.twin(ureg38, CUREG)
+                    pc = umove_s(dd, f"{ir} + d32", ureg38, src, bi38, cu, "HC38")
+                    sout.append(f"instr: MOVE {dsp} is simd=1 & {f(47, 45)}=5 & {f(44, 44)}={gg} & {ir} & {f(40, 40)}={dd} & {f(39, 39)}={ll} & "
+                                f"{upat(dd, ureg38, src, bi38, nb38, nbi38, ll)} & {cu} & HC38 & {a32hi} ; {lo16} "
+                                f"[ d32 = ({a32hi} << 16) | {lo16}; ] {{ {pc} }}")
                 d7 = f(22, 16, signed=True)
                 src = "UR29" if dd else ureg29
                 if dd:
@@ -1217,6 +1570,12 @@ def instr_types():
                 out.append(f"instr: MOVE {dsp} is visa=1 & {f(47, 44)}=0x9 & {f(36, 34)}=2 & {f(37, 37)}={gg} & {ir} & {f(40, 40)}={dd} & {f(39, 39)}={ll} & "
                            f"{upat(dd, ureg29, src, bi29, nb29, nbi29, ll)} & {d7} "
                            f"{{ {pc} }}")
+                if not ll:
+                    cu = FL.twin(ureg29, CUREG)
+                    pc = umove_s(dd, f"{ir} + {d7}", ureg29, src, bi29, cu, "HC29")
+                    sout.append(f"instr: MOVE {dsp} is simd=1 & visa=1 & {f(47, 44)}=0x9 & {f(36, 34)}=2 & {f(37, 37)}={gg} & {ir} & {f(40, 40)}={dd} & {f(39, 39)}={ll} & "
+                                f"{upat(dd, ureg29, src, bi29, nb29, nbi29, ll)} & {cu} & HC29 & {d7} "
+                                f"{{ {pc} }}")
     # Type 16a DM(Ia, Mb) = data32 ; 16b data16 (post-modify)
     for gg in (0, 1):
         ir = regs(43, 41, I2 if gg else I1, kind=f"g{gg}")
@@ -1233,12 +1592,27 @@ def instr_types():
         d16s = f(31, 16, signed=True)
         out.append(f'instr: MOVE "{sp}("^{ir}^", "^{mr}^") = "^{d16s} is visa=1 & {f(47, 44)}=0x9 & {f(36, 34)}=1 & {f(37, 37)}={gg} & {ir} & {mr}{dp} & {d16s} '
                    f'{{ local v:4 = {d16s}; {st} }}')
+        # SIMD (PGR 9-60): the data is also written at the implicit address
+        sst = (f"local ea:4 = {ir}; if (!(({iv} == 0:4) && {brv})) goto <nbr>; bitrev32(ea); <nbr> "
+               f"*[dm]:4 ea = v; local ey:4 = 0; local ok:1 = 0; simdea(ey, ok, ea); {G('ok', '*[dm]:4 ey = v;')} "
+               f"postmod({ir}, {mr}, {bf}, {lf});")
+        for vm, sel in ((0, ""), (1, f" & {f(36, 34)}=0")):
+            sout.append(f'instr: MOVE "{sp}("^{ir}^", "^{mr}^") = "^d32 is simd=1 & visa={vm} & {f(47, 44)}=0x9{sel} & {f(37, 37)}={gg} & {ir} & {mr}{dp} & {a32hi} ; {lo16} '
+                        f'[ d32 = ({a32hi} << 16) | {lo16}; ] {{ local v:4 = d32; {sst} }}')
+        sout.append(f'instr: MOVE "{sp}("^{ir}^", "^{mr}^") = "^{d16s} is simd=1 & visa=1 & {f(47, 44)}=0x9 & {f(36, 34)}=1 & {f(37, 37)}={gg} & {ir} & {mr}{dp} & {d16s} '
+                    f'{{ local v:4 = {d16s}; {sst} }}')
     # Type 17 ureg = data32 / data16
     out.append(f'instr: MOVE {ureg38}^" = "^d32 is {f(47, 40)}=0x0F & {f(39, 39)}=0 & {ureg38} & {bi38} & {a32hi} ; {lo16} '
                f'[ d32 = ({a32hi} << 16) | {lo16}; ] {{ {ureg38} = d32; {bi38} = d32; }}')
     d16s = f(31, 16, signed=True)
     out.append(f'instr: MOVE {ureg38}^" = "^{d16s} is visa=1 & {f(47, 40)}=0x0F & {f(39, 39)}=1 & {ureg38} & {bi38} & {d16s} '
                f'{{ {ureg38} = {d16s}; {bi38} = {d16s}; }}')
+    # SIMD (PGR 9-63): Cureg gets the data too (NOCOMP for a register without a complement)
+    cu38 = FL.twin(ureg38, CUREG)
+    sout.append(f'instr: MOVE {ureg38}^" = "^d32 is simd=1 & {f(47, 40)}=0x0F & {f(39, 39)}=0 & {ureg38} & {bi38} & {cu38} & {a32hi} ; {lo16} '
+                f'[ d32 = ({a32hi} << 16) | {lo16}; ] {{ {ureg38} = d32; {bi38} = d32; {cu38} = d32; }}')
+    sout.append(f'instr: MOVE {ureg38}^" = "^{d16s} is simd=1 & visa=1 & {f(47, 40)}=0x0F & {f(39, 39)}=1 & {ureg38} & {bi38} & {cu38} & {d16s} '
+                f'{{ {ureg38} = {d16s}; {bi38} = {d16s}; {cu38} = {d16s}; }}')
     # Type 18 BIT op sreg data32
     sreg = regs(35, 32, [n for n in UREG[112:128]])
     bops = {0: ("SET", "{r} = {r} | d32;"), 1: ("CLR", "{r} = {r} & ~d32;"), 2: ("TGL", "{r} = {r} ^ d32;"),
@@ -1246,6 +1620,15 @@ def instr_types():
     for code, (nm, sem) in bops.items():
         out.append(f'instr: BIT "{nm} "^{sreg}^" "^d32 is {f(47, 40)}=0x14 & {f(39, 37)}={code} & {sreg} & {a32hi} ; {lo16} '
                    f'[ d32 = ({a32hi} << 16) | {lo16}; ] {{ {sem.format(r=sreg)} }}')
+        # SIMD (PGR 9-66): the same operation on the complementary register Csreg, BTF in PEy's
+        # ASTATy; registers without a complement are unaffected
+        csreg = FL.twin(sreg, [COMP.get(r, "NOCOMP") for r in UREG[112:128]])
+        if code in (4, 5):
+            ysem = G("HCS", sem.format(r=csreg).replace("BTF", "BTFY"))
+        else:
+            ysem = sem.format(r=csreg)
+        sout.append(f'instr: BIT "{nm} "^{sreg}^" "^d32 is simd=1 & {f(47, 40)}=0x14 & {f(39, 37)}={code} & {sreg} & {csreg} & HCS & {a32hi} ; {lo16} '
+                    f'[ d32 = ({a32hi} << 16) | {lo16}; ] {{ {sem.format(r=sreg)} {ysem} }}')
     # Type 19 MODIFY/BITREV with data32 (Id = ...)
     for gg in (0, 1):
         isr = regs(34, 32, I2 if gg else I1, kind=f"m{gg}")
@@ -1300,6 +1683,10 @@ def instr_types():
                f'{{ R2 = I6; I6 = I7; build DS; call ABS24; }}')
     out.append(f'instr: CJUMP "("^REL24^") (DB)" is ({f(47, 40)}=0x18 & {f(39, 32)}=0x44 & DS) ... & REL24 '
                f'{{ R2 = I6; I6 = I7; build DS; call REL24; }}')
+    # SIMD (PGR Table 9-2): S2 = I6 as well
+    for code, tg in ((0x04, "ABS24"), (0x44, "REL24")):
+        sout.append(f'instr: CJUMP "("^{tg}^") (DB)" is (simd=1 & {f(47, 40)}=0x18 & {f(39, 32)}={code:#x} & DS) ... & {tg} '
+                    f'{{ R2 = I6; S2 = I6; I6 = I7; build DS; call {tg}; }}')
     out.append(f'instr: RFRAME is {f(47, 32)}=0x1900 ; {lo16} {{ I7 = I6; I6 = *[dm]:4 I6; }}')
     out.append(f'instr: RFRAME is visa=1 & {f(47, 32, tok="s16")}=0x1901 {{ I7 = I6; I6 = *[dm]:4 I6; }}')
     return [split_cond(o) for o in out if o]
