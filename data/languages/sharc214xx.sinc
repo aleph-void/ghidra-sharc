@@ -155,6 +155,7 @@ define token i16 (16)
   b3_0fyN = (0,3)
   b3_0ry = (0,3)
   b3_0sh = (0,3)
+  b3_0shfN = (0,3)
   b3_2_d11 = (2,3)
   b3_2_d9 = (2,3)
   b3_2fxaN = (2,3)
@@ -170,6 +171,7 @@ define token i16 (16)
   b7_4fxN = (4,7)
   b7_4rx = (4,7)
   b7_4sh = (4,7)
+  b7_4shfN = (4,7)
   b7_6fxmN = (6,7)
   b7_6rxm = (6,7)
 ;
@@ -208,7 +210,7 @@ attach variables [ a32_30 a32_30ind a32_30s1 a34_32m1 a43_41g1 ] [ I8 I9 I10 I11
 attach variables [ a29_27 a29_27ind a29_27s1 a40_38g1 ] [ M8 M9 M10 M11 M12 M13 M14 M15 ];
 attach variables [ a41_38 ] [ S0 S1 S2 S3 S4 S5 S6 S7 S8 S9 S10 S11 S12 S13 S14 S15 ];
 attach variables [ a35_32 ] [ USTAT1 USTAT2 MODE1 MMASK MODE2 FLAGS ASTATX ASTATY STKYX STKYY IRPTL IMASK IMASKP LRPTL USTAT3 USTAT4 ];
-attach names [ a19_16_d16 a19_16fs2N a19_16fyN a23_20_d15 a23_20fxN a27_24faN a27_24fnN a31_28fmN a31_28fsN a35_32fs2N b11_8faN b11_8fnN b15_12fmN b15_12fsN b3_0_d4 b3_0fyN b7_4_d3 b7_4fxN s35_32N s39_36N s39_36bN ] [ "F0" "F1" "F2" "F3" "F4" "F5" "F6" "F7" "F8" "F9" "F10" "F11" "F12" "F13" "F14" "F15" ];
+attach names [ a19_16_d16 a19_16fs2N a19_16fyN a23_20_d15 a23_20fxN a27_24faN a27_24fnN a31_28fmN a31_28fsN a35_32fs2N b11_8faN b11_8fnN b15_12fmN b15_12fsN b3_0_d4 b3_0fyN b3_0shfN b7_4_d3 b7_4fxN b7_4shfN s35_32N s39_36N s39_36bN ] [ "F0" "F1" "F2" "F3" "F4" "F5" "F6" "F7" "F8" "F9" "F10" "F11" "F12" "F13" "F14" "F15" ];
 attach names [ a23_22fxmN b7_6fxmN ] [ "F0" "F1" "F2" "F3" ];
 attach names [ a21_20fymN b5_4fymN ] [ "F4" "F5" "F6" "F7" ];
 attach names [ a19_18_d23 a19_18fxaN b3_2_d11 b3_2fxaN ] [ "F8" "F9" "F10" "F11" ];
@@ -2286,8 +2288,8 @@ SHIMM: b7_4sh^" = EXP "^b3_0sh is a22_22=0 & a21_16=0x20 & a30_27 ; b15_8s & b3_
 SHIMM: b7_4sh^" = EXP "^b3_0sh^" (EX)" is a22_22=0 & a21_16=0x21 & a30_27 ; b15_8s & b3_0sh & b7_4sh  { local k:4 = b15_8s; b7_4sh = shiftop(b3_0sh, k, 0x84:1); setsz(b7_4sh); }
 SHIMM: b7_4sh^" = LEFTZ "^b3_0sh is a22_22=0 & a21_16=0x22 & a30_27 ; b15_8s & b3_0sh & b7_4sh  { local k:4 = b15_8s; b7_4sh = shiftop(b3_0sh, k, 0x88:1); setsz(b7_4sh); }
 SHIMM: b7_4sh^" = LEFTO "^b3_0sh is a22_22=0 & a21_16=0x23 & a30_27 ; b15_8s & b3_0sh & b7_4sh  { local k:4 = b15_8s; b7_4sh = shiftop(b3_0sh, k, 0x8c:1); setsz(b7_4sh); }
-SHIMM: b7_4sh^" = FPACK F{x}" is a22_22=0 & a21_16=0x24 & a30_27 ; b15_8s & b3_0sh & b7_4sh  { local k:4 = b15_8s; b7_4sh = shiftop(b3_0sh, k, 0x90:1); setsz(b7_4sh); }
-SHIMM: "F{n} = FUNPACK "^b3_0sh is a22_22=0 & a21_16=0x25 & a30_27 ; b15_8s & b3_0sh & b7_4sh  { local k:4 = b15_8s; b7_4sh = shiftop(b3_0sh, k, 0x94:1); setsz(b7_4sh); }
+SHIMM: b7_4sh^" = FPACK "^b3_0shfN is a22_22=0 & a21_16=0x24 & a30_27 ; b15_8s & b3_0sh & b3_0shfN & b7_4sh  { local k:4 = b15_8s; b7_4sh = shiftop(b3_0sh, k, 0x90:1); setsz(b7_4sh); }
+SHIMM: b7_4shfN^" = FUNPACK "^b3_0sh is a22_22=0 & a21_16=0x25 & a30_27 ; b15_8s & b3_0sh & b7_4sh & b7_4shfN  { local k:4 = b15_8s; b7_4sh = shiftop(b3_0sh, k, 0x94:1); setsz(b7_4sh); }
 SHIMM: "BITDEP "^b3_0sh^" BY "^imm12 is a22_22=0 & a21_16=0x1d & a30_27 ; b15_8s & b15_8u & b3_0sh & b7_4sh [ imm12 = (a30_27 << 8) | b15_8u; ] { local k:4 = imm12; b7_4sh = shiftop(b3_0sh, k, 0x74:1); setsz(b7_4sh); }
 SHIMM: b7_4sh^" = BITEXT "^b3_0sh^" BY "^imm12 is a22_22=0 & a21_16=0x14 & a30_27 ; b15_8s & b15_8u & b3_0sh & b7_4sh [ imm12 = (a30_27 << 8) | b15_8u; ] { local k:4 = imm12; b7_4sh = shiftop(b3_0sh, k, 0x50:1); setsz(b7_4sh); }
 SHIMM: b7_4sh^" = BITEXT "^b3_0sh^" BY "^imm12^" (NU)" is a22_22=0 & a21_16=0x16 & a30_27 ; b15_8s & b15_8u & b3_0sh & b7_4sh [ imm12 = (a30_27 << 8) | b15_8u; ] { local k:4 = imm12; b7_4sh = shiftop(b3_0sh, k, 0x58:1); setsz(b7_4sh); }

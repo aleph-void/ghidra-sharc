@@ -724,18 +724,23 @@ def instr_types():
     for op, tmpl in S.SHIFT.items():
         op6 = op >> 2
         t = (tmpl.replace("R{n}", "\x01").replace("R{x}", "\x02")
+             .replace("F{n}", "\x06").replace("F{x}", "\x07")
              .replace("{y}", "\x03").replace("{f}", "\x04").replace("{b}", "\x05").replace("{w}", "\x05"))
         used = []
 
         def opnd(tag):
+            if tag in "\x06\x07":            # FPACK / FUNPACK name the register as F
+                n = FL.names(7, 4, F, kind="shf") if tag == "\x06" else FL.names(3, 0, F, kind="shf")
+                used.append(n)
+                return n
             base = {"\x01": sh_rn, "\x02": sh_rx, "\x03": sh_d8}.get(tag)
             if base is None:
                 return {"\x04": f'{sh_bit}^":"^len6', "\x05": "imm12"}[tag]
             n = FL.alias(base) if base in used else base
             used.append(n)
             return n
-        parts = re.split("([\x01-\x05])", t)
-        dd = "^".join(opnd(p) if p and p in "\x01\x02\x03\x04\x05" else f'"{p}"' for p in parts if p)
+        parts = re.split("([\x01-\x07])", t)
+        dd = "^".join(opnd(p) if p and p in "\x01\x02\x03\x04\x05\x06\x07" else f'"{p}"' for p in parts if p)
         pat_i16 = set(used) | {sh_rn, sh_rx, sh_d8}
         acts = ""
         variants = [("", None)]
