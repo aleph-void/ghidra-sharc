@@ -3356,6 +3356,8 @@ instr: "NOP" is visa=1 & s47_40=0x00 & s39_38=0 & s32_32=1 { }
 
 instr: "IDLE" is visa=1 & s47_40=0x00 & s39_39=1 & s32_32=1 { idle(); }
 
+instr: "EMUIDLE" is visa=1 & s47_40=0x00 & s39_39=0 & s38_38=1 & s32_32=1 { emuidle(); }
+
 instr: "CJUMP" "("^ABS24^") (DB)" is (a47_40=0x18 & a39_32=0x04 & DS) ... & ABS24 { R2 = I6; I6 = I7; build DS; call ABS24; }
 
 instr: "CJUMP" "("^REL24^") (DB)" is (a47_40=0x18 & a39_32=0x44 & DS) ... & REL24 { R2 = I6; I6 = I7; build DS; call REL24; }

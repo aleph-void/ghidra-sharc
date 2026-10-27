@@ -1023,6 +1023,7 @@ def instr_types():
         out.append(f'instr: EMUIDLE is visa={vm} & {f(47, 40)}=0x00 & {f(39, 39)}=0 & {f(38, 38)}=1{extra} {{ emuidle(); }}')
     out.append(f'instr: NOP is visa=1 & {f(47, 40, tok="s16")}=0x00 & {f(39, 38, tok="s16")}=0 & {f(32, 32, tok="s16")}=1 {{ }}')
     out.append(f'instr: IDLE is visa=1 & {f(47, 40, tok="s16")}=0x00 & {f(39, 39, tok="s16")}=1 & {f(32, 32, tok="s16")}=1 {{ idle(); }}')
+    out.append(f'instr: EMUIDLE is visa=1 & {f(47, 40, tok="s16")}=0x00 & {f(39, 39, tok="s16")}=0 & {f(38, 38, tok="s16")}=1 & {f(32, 32, tok="s16")}=1 {{ emuidle(); }}')
     # Type 25 CJUMP (C call: I6 = I7, R2 = old I6; the frame is stored in the delay slots)
     out.append(f'instr: CJUMP "("^ABS24^") (DB)" is ({f(47, 40)}=0x18 & {f(39, 32)}=0x04 & DS) ... & ABS24 '
                f'{{ R2 = I6; I6 = I7; build DS; call ABS24; }}')
