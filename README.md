@@ -9,7 +9,14 @@ A Ghidra processor extension for the Analog Devices ADSP-214xx SHARC
 |---|---|
 | `SHARC:BE:32:214xx` | the language (ISA + VISA, short-word code space) |
 | **ADI SHARC Boot Stream (LDR)** loader | imports `.ldr` boot streams, with or without the boot kernel |
-| **SHARC Delay Slot**, **Loop End**, **Call Idiom**, **Function Pointer Arguments** analyzers | see below |
+| **ADI SHARC Executable (DXE)** loader | imports VisualDSP++ / CrossCore `.dxe` executables (ELF) with their symbols |
+| **SHARC Delay Slot**, **Loop End**, **Call Idiom**, **Function Pointer Arguments**, **SIMD Mode** analyzers | see below |
+
+This fork (branch `ghidra-rare`) is verified and maintained as part of
+[Ghidra-Rare](https://github.com/aleph-void/Ghidra-Rare): see
+[GHIDRA-RARE.md](GHIDRA-RARE.md) for what was tested, how, and what changed,
+and this repository's Releases page for prebuilt zips for Ghidra 12.1.3,
+12.1.4 and 12.2.
 
 References: *SHARC Processor Programming Reference* (ADSP-2136x/2137x/214xx,
 rev 2.2) for the instruction set, *VisualDSP++ 5.0 Loader and Utilities
@@ -26,7 +33,8 @@ memory map.
    image with language `SHARC:BE:32:214xx`.
 
 Zips are built and smoke-tested for Ghidra 12.0.4, 12.1.3 and 12.1.4 (the
-matrix in `.github/workflows/build.yml`).  For another version, build one
+matrix in `.github/workflows/build.yml`); the Ghidra-Rare releases of this
+fork are built for 12.1.3, 12.1.4 and 12.2.  For another version, build one
 (below).
 
 ## Build
@@ -65,17 +73,30 @@ headless Ghidra; neither touches your own Ghidra settings (see `tools/env.sh`).
   before anything is written (`R8 = R8 + R1, DM(I0,M1) = R8` stores the old
   R8).  Conditional instructions exist once per condition and once for TRUE,
   so unconditional code carries no dead branches.
-* **Flags.** The ALU sets AZ/AN, the multiplier MN (condition MS), the shifter
-  SZ; BIT TST/XOR set BTF.  `NOT LCE` is `CURLCNTR != 1`.
+* **Flags.** The status flags are bit ranges of ASTATx, STKYx, MODE1 and
+  FLAGS, so moving those registers moves the flags.  The ALU sets
+  AZ/AN/AV/AC/AS/AI/AF and the sticky bits, the multiplier MN/MV/MU/MI, the
+  shifter SZ/SV/SS; COMP shifts the compare accumulator CACC; BIT TST/XOR
+  set BTF.  `NOT LCE` is `CURLCNTR != 1`.
 * **B registers.** Loading `Bn` also loads `In` with the same value
   (Programming Reference, "Circular Buffering Mode"), for every ureg load:
   register moves, memory loads and immediates.  A companion operand over the
   ureg field names `In` for the B codes and the scratch register `BIX`, which
   nothing reads, for all others.
-* **Arithmetic.** Fixed and floating ALU, integer multiply exact, fractional
-  multiply as 1.31, shifts and immediate bit-field extract/deposit exact.
-  CLIP, SCALB, MANT, LOGB, RECIPS, RSQRTS, COPYSIGN, register-count FEXT/FDEP,
-  MR accumulator operations and saturation are user operations.
+* **Arithmetic.** All computations are p-code (Ghidra-Rare): ALUSAT
+  saturation, carries, AVG rounding, CLIP; floating point with NaN results
+  all ones, denormals flushed to zero, FIX/TRUNC by the MODE1 TRUNC bit with
+  saturation, SCALB, MANT, LOGB, COPYSIGN, RECIPS/RSQRTS (exact value, not
+  the seed table), FPACK/FUNPACK; 80-bit MR accumulation, rounding and SAT;
+  every shifter form and the bit FIFO.  The compiler spec tracks MODE1 at
+  its C run-time value, so compiled code decompiles without the mode p-code.
+* **DAGs and stacks** (Ghidra-Rare): circular buffering (CBUFEN, Bn/Ln),
+  bit-reversed I0/I8 (context `brm0`/`brm8`), long-word moves, the PC,
+  loop and status stacks.
+* **SIMD** (Ghidra-Rare): the context bit `simd` makes every instruction also
+  perform its PEy half (S registers, MSF/MSB, ASTATy/STKYy, the
+  complementary memory word, per-PE conditions).  The **SHARC SIMD Mode**
+  analyzer sets it between `BIT SET MODE1 PEYEN` and `BIT CLR MODE1 PEYEN`.
 
 ## Hardware loops
 
@@ -142,19 +163,21 @@ points.  MULTI_PROC streams are not supported.
 
 ## Known limitations
 
-* SIMD (PEy), circular buffering (`L`/`B` registers), bit-reversed
-  addressing and long-word (`LW`) moves are not modelled: data address
-  generators update linearly and moves are 32-bit.
-* Not modelled against the Programming Reference, found by executing single
-  instructions in the p-code emulator against an independent interpreter: AC,
-  AV, MV and SV are not set (conditions on them read whatever the register
-  holds); the multiplier half of a multifunction instruction does not set MS;
-  denormal float results are kept rather than flushed to zero; FIX/TRUNC of a
-  value outside the int32 range gives the p-code `trunc` result, not all 1s or
-  (ALUSAT) the saturated value.  None of these changes an instruction's
-  register data flow.
-* The status and PC stacks (`PUSH/POP STS`, `PCSTK`), cache control, IDLE and
-  RTI's status restore are user operations.
+Items marked *fixed* were closed in the Ghidra-Rare fork (see GHIDRA-RARE.md).
+
+* *Fixed:* SIMD (PEy), circular buffering (`L`/`B` registers), bit-reversed
+  addressing and long-word (`LW`) moves are modelled.  SIMD and bit-reverse
+  mode are run-time MODE1 bits, so they are context assumptions (`simd`,
+  `brm0`, `brm8`), set by the SIMD Mode analyzer or by hand.
+* *Fixed:* AC, AV, MV and SV are set; the multiplier half of a multifunction
+  instruction sets MN; denormal results are flushed to zero; FIX/TRUNC of a
+  value outside the int32 range gives all 1s or (ALUSAT) the saturated value.
+* *Fixed:* the status, PC and loop stacks are p-code.  Remaining user
+  operations: IDLE, EMUIDLE and FLUSH CACHE (core halt and cache state).
+  RTI does not pop the status stack: the push happens on interrupt entry,
+  which is not an instruction.
+* Registers are 32 bits: the 40-bit extended-precision float format (MODE1
+  RND32 clear) is not modelled; the C run time always runs with RND32 set.
 * Delay slots are correct only after the SHARC Delay Slot analyzer has run;
   disassembly alone gives one slot when the first is 32 or 48 bits long.
 * A loop whose end lies before its DO (the ADI boot kernel's FINAL_INIT
