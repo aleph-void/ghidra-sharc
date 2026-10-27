@@ -493,8 +493,10 @@ def map48(t):
     instruction's three parcels are stored: SW = 3*A - (A & 0xe0000) (block 0 0x8c000 ->
     0x124000, block 1 0xac000 -> 0x164000, block 2 0xc0000 -> 0x180000, block 3 0xe0000 ->
     0x1c0000).  There are no conditionals in pattern expressions, so the choice is made
-    arithmetically with s48 = bit 19 and not bit 20."""
-    s48 = f"((({t}) >> 19) & 1 & ~(({t}) >> 20))"
+    arithmetically: s48 = bit 19 set and bits 31..20 clear (nz is 1 when any of bits
+    31..20 is set).  Testing bit 20 alone mapped external addresses such as 0x280000."""
+    nz = f"((((({t}) >> 20) & 0xfff) + 0xfff) >> 12)"
+    s48 = f"((({t}) >> 19) & 1 & ({nz} ^ 1))"
     return f"({t}) + {s48} * (2 * ({t}) - (({t}) & 0xe0000))"
 
 

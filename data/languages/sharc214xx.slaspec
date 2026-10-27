@@ -78,7 +78,7 @@ macro setsz(r)   { SZ = (r == 0); }
 # addresses already.  `isa` is the constant exported by ISA, so the decompiler folds the
 # expression away in VISA code.
 macro pmcode(t, isa) {
-	local s48:4 = isa * ((t >> 19) & 1) * (~(t >> 20) & 1);
+	local s48:4 = isa * zext((t >> 19) == 1);
 	t = t + s48 * (2 * t - (t & 0xe0000));
 }
 

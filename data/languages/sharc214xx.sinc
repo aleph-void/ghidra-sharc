@@ -1915,8 +1915,8 @@ CMP2B: "MR1B = "^a27_24rn is a38_38=1 & a37_33mr=0 & a32_32=1 & a27_24rn & a31_2
 CMP2B: a27_24rn^" = MR2B" is a38_38=1 & a37_33mr=0 & a32_32=0 & a27_24rn & a31_28mrsel=6 { a27_24rn = MRB2; }
 CMP2B: "MR2B = "^a27_24rn is a38_38=1 & a37_33mr=0 & a32_32=1 & a27_24rn & a31_28mrsel=6 { MRB2 = a27_24rn; }
 
-ABS24: tgt is a23_16 ; b15_0 [ tgt = (((a23_16 << 16) | b15_0)) + (((((a23_16 << 16) | b15_0)) >> 19) & 1 & ~((((a23_16 << 16) | b15_0)) >> 20)) * (2 * (((a23_16 << 16) | b15_0)) - ((((a23_16 << 16) | b15_0)) & 0xe0000)); ] { export *:4 tgt; }
-REL24: tgt is visa=1 & a23_16s ; b15_0 [ tgt = ((inst_start + ((a23_16s << 16) | b15_0))) + ((((inst_start + ((a23_16s << 16) | b15_0))) >> 19) & 1 & ~(((inst_start + ((a23_16s << 16) | b15_0))) >> 20)) * (2 * ((inst_start + ((a23_16s << 16) | b15_0))) - (((inst_start + ((a23_16s << 16) | b15_0))) & 0xe0000)); ] { export *:4 tgt; }
+ABS24: tgt is a23_16 ; b15_0 [ tgt = (((a23_16 << 16) | b15_0)) + (((((a23_16 << 16) | b15_0)) >> 19) & 1 & ((((((((a23_16 << 16) | b15_0)) >> 20) & 0xfff) + 0xfff) >> 12) ^ 1)) * (2 * (((a23_16 << 16) | b15_0)) - ((((a23_16 << 16) | b15_0)) & 0xe0000)); ] { export *:4 tgt; }
+REL24: tgt is visa=1 & a23_16s ; b15_0 [ tgt = ((inst_start + ((a23_16s << 16) | b15_0))) + ((((inst_start + ((a23_16s << 16) | b15_0))) >> 19) & 1 & (((((((inst_start + ((a23_16s << 16) | b15_0))) >> 20) & 0xfff) + 0xfff) >> 12) ^ 1)) * (2 * ((inst_start + ((a23_16s << 16) | b15_0))) - (((inst_start + ((a23_16s << 16) | b15_0))) & 0xe0000)); ] { export *:4 tgt; }
 REL24: tgt is visa=0 & a23_16s ; b15_0 [ tgt = inst_start + ((a23_16s << 16) | b15_0) * 3; ] { export *:4 tgt; }
 REL6: tgt is visa=1 & a32_27s [ tgt = inst_start + a32_27s; ] { export *:4 tgt; }
 REL6: tgt is visa=0 & a32_27s [ tgt = inst_start + a32_27s * 3; ] { export *:4 tgt; }
