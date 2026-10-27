@@ -9,3 +9,4 @@ SMOKE analyzer SHARC Call Idiom
 SMOKE analyzer SHARC Delay Slot
 SMOKE analyzer SHARC Function Pointer Arguments
 SMOKE analyzer SHARC Loop End
+SMOKE analyzer SHARC SIMD Mode
